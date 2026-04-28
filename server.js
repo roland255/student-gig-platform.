@@ -3,18 +3,23 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// This serves your HTML file automatically
+app.use(express.json()); // Allows the server to read data sent from the frontend
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Your "Kitchen" (The API data)
-app.get('/api/gigs', (req, res) => {
-    res.json([
-        { id: 1, title: "Graphic Designer", pay: "₦10,000" },
-        { id: 2, title: "Content Writer", pay: "₦5,000" },
-        { id: 3, title: "Social Media Manager", pay: "₦15,000" }
-    ]);
+// This is a temporary "database" in the server's memory
+let studentApplications = [];
+
+// 1. GET ROUTE: To see the stored information
+app.get('/api/applications', (req, res) => {
+    res.json(studentApplications);
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// 2. POST ROUTE: To receive and store new information
+app.post('/api/apply', (req, res) => {
+    const newEntry = req.body;
+    studentApplications.push(newEntry); // Save the data
+    console.log("New Application Received:", newEntry);
+    res.status(201).json({ message: "Data stored successfully!" });
 });
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
