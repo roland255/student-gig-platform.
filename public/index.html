@@ -3,137 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GigPort | Secure Student Marketplace</title>
+    <title>GigPort | Student Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-slate-50">
 
-    <div id="auth-screen" class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-auto max-w-md">
-            <h1 class="text-3xl font-bold text-blue-700 text-center mb-2">GigPort.</h1>
-            <p class="text-gray-500 text-center mb-8">Sign in to your student account</p>
+    <div id="auth-box" class="min-h-screen flex items-center justify-center p-6">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border">
+            <h1 class="text-3xl font-bold text-blue-700 text-center mb-6" id="auth-title">Create Account</h1>
             
-            <form id="loginForm" class="space-y-4">
-                <input type="email" id="userEmail" placeholder="Email Address" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
-                <input type="password" placeholder="Password" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
-                <div class="flex justify-between text-sm text-blue-600">
-                    <a href="#" class="hover:underline">Forgot password?</a>
+            <form id="authForm" class="space-y-4">
+                <input type="email" id="email" placeholder="UniPort Email" class="w-full p-3 border rounded-lg" required>
+                <input type="password" id="password" placeholder="Password" class="w-full p-3 border rounded-lg" required>
+                
+                <div class="flex items-start gap-2 text-xs text-gray-500">
+                    <input type="checkbox" id="termsAgree" class="mt-1" required>
+                    <label for="termsAgree">I agree to the <button type="button" onclick="toggleTerms()" class="text-blue-600 underline">Terms and Conditions</button></label>
                 </div>
-                <button type="submit" class="w-full bg-blue-700 text-white p-3 rounded-lg font-bold hover:bg-blue-800 transition">Sign In</button>
+
+                <button type="submit" id="authBtn" class="w-full bg-blue-700 text-white p-3 rounded-lg font-bold">Sign Up</button>
             </form>
 
-            <div class="relative my-6 text-center">
-                <span class="bg-white px-4 text-gray-400 text-sm relative z-10">OR CONTINUE WITH</span>
-                <hr class="absolute top-1/2 w-full border-gray-200">
-            </div>
-
-            <div class="grid grid-cols-3 gap-4 mb-6">
-                <button class="border p-2 rounded-lg hover:bg-gray-50"><i class="fab fa-google text-red-500"></i></button>
-                <button class="border p-2 rounded-lg hover:bg-gray-50"><i class="fab fa-github"></i></button>
-                <button class="border p-2 rounded-lg hover:bg-gray-50"><i class="fab fa-apple"></i></button>
-            </div>
-
-            <p class="text-xs text-gray-400 text-center">
-                By signing in, you agree to our <a href="#" class="underline">Terms & Conditions</a>
+            <p class="text-center mt-6 text-sm">
+                <span id="toggle-text">Already have an account?</span>
+                <button onclick="switchAuth()" class="text-blue-700 font-bold underline" id="toggle-btn">Sign In</button>
             </p>
         </div>
     </div>
 
-    <div id="dashboard" class="hidden">
-        <nav class="bg-blue-700 text-white p-4 flex justify-between items-center shadow-lg">
-            <span class="text-xl font-bold">GigPort.</span>
-            <div class="flex gap-4 items-center">
-                <span id="userDisplay" class="text-sm border-r pr-4"></span>
-                <button onclick="logout()" class="text-sm bg-blue-600 px-3 py-1 rounded">Logout</button>
+    <div id="terms-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-6 z-50">
+        <div class="bg-white p-6 rounded-xl max-w-lg w-full max-h-[70vh] overflow-y-auto">
+            <h2 class="text-xl font-bold mb-4">Terms and Conditions</h2>
+            <div class="text-sm text-gray-600 space-y-2">
+                <p>1. <strong>Eligibility:</strong> This platform is exclusively for University of Port Harcourt students.</p>
+                <p>2. <strong>Conduct:</strong> Users must provide honest details about gig requirements and payments.</p>
+                <p>3. <strong>Liability:</strong> GigPort is a bridge; we are not responsible for private payment disputes.</p>
+                <p>4. <strong>Privacy:</strong> Your data is stored securely and only shared with the gig owner when you apply.</p>
             </div>
+            <button onclick="toggleTerms()" class="mt-6 w-full bg-gray-200 p-2 rounded-lg font-bold">Close</button>
+        </div>
+    </div>
+
+    <div id="app-screen" class="hidden">
+        <nav class="bg-blue-700 text-white p-4 shadow-lg flex justify-between">
+            <span class="font-bold text-xl">GigPort.</span>
+            <button onclick="location.reload()" class="text-sm opacity-80">Sign Out</button>
         </nav>
-
+        
         <div class="max-w-4xl mx-auto p-6">
-            <div class="flex border-b mb-6">
-                <button onclick="switchTab('browse')" class="px-6 py-3 font-bold border-b-2 border-blue-700">Browse Gigs</button>
-                <button onclick="switchTab('my-gigs')" class="px-6 py-3 font-bold text-gray-500">My Posted Gigs</button>
-                <button onclick="switchTab('post')" class="ml-auto bg-green-600 text-white px-4 py-2 rounded-lg text-sm">+ Post Gig</button>
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <button onclick="view('market')" class="p-4 bg-white border rounded-xl shadow-sm font-bold">Marketplace</button>
+                <button onclick="view('admin')" class="p-4 bg-white border rounded-xl shadow-sm font-bold">Admin Panel</button>
             </div>
 
-            <div id="section-browse" class="tab-content space-y-4">
+            <div id="view-market">
                 </div>
 
-            <div id="section-my-gigs" class="tab-content hidden space-y-4">
-                <h3 class="text-lg font-bold mb-4 text-gray-700">Applications Received</h3>
-                <div id="notifications-list" class="space-y-2">
-                    </div>
-            </div>
-
-            <div id="section-post" class="tab-content hidden bg-white p-6 rounded-xl shadow border">
-                <h2 class="text-xl font-bold mb-4">Post a New Student Gig</h2>
-                <input type="text" id="gigTitle" placeholder="Job Title" class="w-full p-3 border rounded mb-4">
-                <textarea id="gigDesc" placeholder="Description" class="w-full p-3 border rounded mb-4"></textarea>
-                <input type="text" id="gigPay" placeholder="Payment (e.g. ₦5k)" class="w-full p-3 border rounded mb-4">
-                <button onclick="submitGig()" class="w-full bg-blue-700 text-white p-3 rounded-lg font-bold">Publish</button>
+            <div id="view-admin" class="hidden">
+                <h3 class="font-bold mb-4">Applications for your Gigs</h3>
+                <div id="admin-data" class="space-y-2"></div>
             </div>
         </div>
     </div>
 
     <script>
-        let currentUser = null;
+        let isLogin = false;
+        let userEmail = "";
 
-        // AUTH LOGIC
-        document.getElementById('loginForm').onsubmit = (e) => {
-            e.preventDefault();
-            currentUser = document.getElementById('userEmail').value;
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.getElementById('userDisplay').innerText = currentUser;
-            loadGigs();
-        };
+        function toggleTerms() { document.getElementById('terms-modal').classList.toggle('hidden'); }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('section-' + tabId).classList.remove('hidden');
+        function switchAuth() {
+            isLogin = !isLogin;
+            document.getElementById('auth-title').innerText = isLogin ? "Sign In" : "Create Account";
+            document.getElementById('authBtn').innerText = isLogin ? "Sign In" : "Sign Up";
+            document.getElementById('toggle-text').innerText = isLogin ? "New here?" : "Already have an account?";
+            document.getElementById('toggle-btn').innerText = isLogin ? "Sign Up" : "Sign In";
         }
 
-        async function submitGig() {
-            const gig = {
-                owner: currentUser,
-                title: document.getElementById('gigTitle').value,
-                desc: document.getElementById('gigDesc').value,
-                pay: document.getElementById('gigPay').value
-            };
-            await fetch('/api/post-gig', {
+        document.getElementById('authForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const route = isLogin ? '/api/login' : '/api/register';
+
+            const res = await fetch(route, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(gig)
+                body: JSON.stringify({ email, password })
             });
-            alert("Gig Published!");
-            switchTab('browse');
-            loadGigs();
+
+            if (res.ok) {
+                userEmail = email;
+                document.getElementById('auth-box').classList.add('hidden');
+                document.getElementById('app-screen').classList.remove('hidden');
+                loadMarket();
+            } else {
+                alert("Auth failed. Check credentials.");
+            }
+        };
+
+        async function view(v) {
+            document.getElementById('view-market').classList.toggle('hidden', v !== 'market');
+            document.getElementById('view-admin').classList.toggle('hidden', v !== 'admin');
+            if (v === 'admin') loadAdminData();
         }
 
-        async function loadGigs() {
-            const res = await fetch('/api/gigs');
+        async function loadAdminData() {
+            const res = await fetch(`/api/my-applicants?email=${userEmail}`);
             const data = await res.json();
-            
-            // Show all gigs in Browse
-            document.getElementById('section-browse').innerHTML = data.map(g => `
-                <div class="bg-white p-5 rounded-xl shadow-sm border flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold text-lg">${g.title}</h4>
-                        <p class="text-gray-500 text-sm">${g.desc}</p>
-                        <span class="text-green-600 font-bold text-sm">${g.pay}</span>
-                    </div>
-                    <button onclick="apply('${g.owner}', '${g.title}')" class="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-bold text-sm">Apply</button>
+            document.getElementById('admin-data').innerHTML = data.map(app => `
+                <div class="bg-white p-4 rounded border">
+                    <p><strong>Gig:</strong> ${app.gigTitle}</p>
+                    <p><strong>Applicant:</strong> ${app.applicantEmail}</p>
                 </div>
-            `).join('');
-
-            // Show ONLY notifications for Gigs YOU posted
-            const myApps = await fetch('/api/notifications?user=' + currentUser);
-            const appData = await res.json(); // Usually a separate applications endpoint
-            // Logic to filter notifications goes here in real backend
+            `).join('') || "No applicants yet.";
         }
-
-        function logout() { location.reload(); }
     </script>
 </body>
-    </html>
-    
+</html>
