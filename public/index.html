@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GigPort | The Global Student Hub</title>
+    <title>GigPort | Global Student Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -11,20 +11,12 @@
 
     <div id="auth-screen" class="min-h-screen flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-2xl border border-slate-100">
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-black text-blue-700 tracking-tight">GigPort.</h1>
-                <p class="text-slate-400 mt-2" id="auth-subtitle">Choose your preferred sign-up method</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
-                <button class="flex items-center justify-center gap-2 border p-3 rounded-xl hover:bg-slate-50 transition"><i class="fab fa-google text-red-500"></i> <span class="text-sm font-bold">Google</span></button>
-                <button class="flex items-center justify-center gap-2 border p-3 rounded-xl hover:bg-slate-50 transition"><i class="fab fa-github"></i> <span class="text-sm font-bold">GitHub</span></button>
-                <button class="flex items-center justify-center gap-2 border p-3 rounded-xl hover:bg-slate-50 transition"><i class="fab fa-apple"></i> <span class="text-sm font-bold">Apple</span></button>
-            </div>
-
-            <div class="relative mb-8 text-center">
-                <span class="bg-white px-4 text-slate-400 text-xs font-bold relative z-10">OR CONTINUE WITH EMAIL</span>
-                <hr class="absolute top-1/2 w-full border-slate-100">
+            <h1 class="text-4xl font-black text-blue-700 text-center mb-8">GigPort.</h1>
+            
+            <div class="grid grid-cols-3 gap-3 mb-8">
+                <button class="border p-3 rounded-xl hover:bg-slate-50 transition"><i class="fab fa-google text-red-500"></i></button>
+                <button class="border p-3 rounded-xl hover:bg-slate-50 transition"><i class="fab fa-github"></i></button>
+                <button class="border p-3 rounded-xl hover:bg-slate-50 transition"><i class="fab fa-apple"></i></button>
             </div>
 
             <form id="mainAuthForm" class="space-y-4">
@@ -35,76 +27,117 @@
 
                 <div id="signup-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input type="text" id="regName" placeholder="Full Name" class="p-4 bg-slate-50 border rounded-xl outline-none">
-                    <input type="text" id="regNick" placeholder="Nickname (Username)" class="p-4 bg-slate-50 border rounded-xl outline-none">
-                    <input type="email" id="regEmail" placeholder="Email Address" class="p-4 bg-slate-50 border rounded-xl outline-none">
-                    <input type="date" id="regDob" class="p-4 bg-slate-50 border rounded-xl outline-none text-slate-400">
-                    <input type="text" id="regUni" placeholder="University Name" class="col-span-full p-4 bg-slate-50 border rounded-xl outline-none">
+                    <input type="text" id="regNick" placeholder="Nickname" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                    <input type="email" id="regEmail" placeholder="Email" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                    <input type="date" id="regDob" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                    <input type="text" id="regUni" placeholder="University" class="col-span-full p-4 bg-slate-50 border rounded-xl outline-none">
                     <input type="text" id="regCountry" placeholder="Country" class="p-4 bg-slate-50 border rounded-xl outline-none">
-                    <input type="text" id="regState" placeholder="State/Region" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                    <input type="text" id="regState" placeholder="State" class="p-4 bg-slate-50 border rounded-xl outline-none">
                     <input type="text" id="regCity" placeholder="City" class="p-4 bg-slate-50 border rounded-xl outline-none">
-                    <input type="password" id="regPass" placeholder="Create Password" class="col-span-full p-4 bg-slate-50 border rounded-xl outline-none">
-                    
-                    <div class="col-span-full flex items-start gap-2 text-xs text-slate-400 mt-2">
-                        <input type="checkbox" required class="mt-1">
-                        <span>I agree to the <a href="#" class="text-blue-600 underline">Global Terms of Service</a></span>
-                    </div>
+                    <input type="password" id="regPass" placeholder="Password" class="col-span-full p-4 bg-slate-50 border rounded-xl outline-none">
                 </div>
 
-                <button type="submit" id="submitBtn" class="w-full bg-blue-700 text-white p-4 rounded-2xl font-black text-lg hover:bg-blue-800 shadow-xl transition-all">Sign In</button>
+                <button type="submit" id="submitBtn" class="w-full bg-blue-700 text-white p-4 rounded-2xl font-black shadow-xl">Sign In</button>
             </form>
-
-            <p class="text-center mt-8 text-sm font-medium text-slate-500">
-                <span id="toggle-text">New to GigPort?</span>
-                <button onclick="switchAuth()" class="text-blue-700 font-bold ml-1 hover:underline" id="toggle-btn">Create an Account</button>
-            </p>
+            <button onclick="switchAuth()" class="w-full mt-6 text-blue-700 font-bold" id="toggle-btn">Create an Account</button>
         </div>
     </div>
 
     <div id="otp-screen" class="hidden min-h-screen flex items-center justify-center bg-blue-700 p-4">
         <div class="bg-white p-10 rounded-3xl shadow-2xl text-center max-w-sm w-full">
-            <div class="w-16 h-16 bg-blue-50 text-blue-700 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">
-                <i class="fas fa-envelope-open-text"></i>
+            <h2 class="text-2xl font-bold mb-4">Verify Identity</h2>
+            <p class="text-slate-400 text-sm mb-8">Enter 123456 to confirm your student email.</p>
+            <input type="text" id="otpCode" maxlength="6" class="w-full text-center text-4xl font-black tracking-widest p-4 bg-slate-50 border rounded-2xl mb-8 outline-none focus:border-blue-500">
+            <button onclick="confirmOtp()" class="w-full bg-blue-700 text-white p-4 rounded-xl font-bold">Verify Code</button>
+        </div>
+    </div>
+
+    <div id="dashboard" class="hidden min-h-screen">
+        <nav class="bg-white border-b p-4 flex justify-between px-8">
+            <span class="text-2xl font-black text-blue-700">GigPort.</span>
+            <button onclick="location.reload()" class="bg-slate-100 px-4 py-2 rounded-lg font-bold">Sign Out</button>
+        </nav>
+        <div class="p-8 max-w-5xl mx-auto flex flex-col items-center gap-10">
+            <div class="text-center">
+                <h2 class="text-3xl font-black">Student Marketplace</h2>
+                <p class="text-slate-500 mt-2">What would you like to do today?</p>
             </div>
-            <h2 class="text-2xl font-bold">Check your email</h2>
-            <p class="text-slate-400 text-sm mt-2 mb-8">We sent a 6-digit code to verify your identity.</p>
-            <input type="text" id="otpCode" maxlength="6" class="w-full text-center text-4xl font-black tracking-[0.5em] p-4 bg-slate-50 border-2 border-blue-50 rounded-2xl mb-8 outline-none focus:border-blue-500 transition" placeholder="000000">
-            <button onclick="confirmOtp()" class="w-full bg-blue-700 text-white p-4 rounded-xl font-bold hover:shadow-lg transition">Verify Code</button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                <div class="bg-white p-10 rounded-3xl border-2 border-blue-50 text-center hover:border-blue-500 transition cursor-pointer">
+                    <i class="fas fa-briefcase text-4xl text-blue-700 mb-4"></i>
+                    <h3 class="text-xl font-bold">Apply for Gigs</h3>
+                    <p class="text-slate-400 text-sm mt-2">Find work and earn as a student.</p>
+                </div>
+                <div class="bg-white p-10 rounded-3xl border-2 border-blue-50 text-center hover:border-blue-500 transition cursor-pointer">
+                    <i class="fas fa-plus-circle text-4xl text-blue-700 mb-4"></i>
+                    <h3 class="text-xl font-bold">Post a Gig</h3>
+                    <p class="text-slate-400 text-sm mt-2">Hire other talented students.</p>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        let isSignupMode = false;
-        let userEmailForVerify = "";
+        let isSignup = false;
+        let tempEmail = "";
 
         function switchAuth() {
-            isSignupMode = !isSignupMode;
-            document.getElementById('login-fields').classList.toggle('hidden', isSignupMode);
-            document.getElementById('signup-fields').classList.toggle('hidden', !isSignupMode);
-            document.getElementById('submitBtn').innerText = isSignupMode ? "Create Account" : "Sign In";
-            document.getElementById('auth-subtitle').innerText = isSignupMode ? "Fill in your student details" : "Choose your preferred sign-up method";
-            document.getElementById('toggle-text').innerText = isSignupMode ? "Already have an account?" : "New to GigPort?";
-            document.getElementById('toggle-btn').innerText = isSignupMode ? "Sign In" : "Create an Account";
+            isSignup = !isSignup;
+            document.getElementById('login-fields').classList.toggle('hidden', isSignup);
+            document.getElementById('signup-fields').classList.toggle('hidden', !isSignup);
+            document.getElementById('submitBtn').innerText = isSignup ? "Create Account" : "Sign In";
+            document.getElementById('toggle-btn').innerText = isSignup ? "Already have an account? Sign In" : "Create an Account";
         }
 
         document.getElementById('mainAuthForm').onsubmit = async (e) => {
             e.preventDefault();
-            if(isSignupMode) {
-                userEmailForVerify = document.getElementById('regEmail').value;
-                // In your presentation, you can say this sends the code
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('otp-screen').classList.remove('hidden');
+            if(isSignup) {
+                tempEmail = document.getElementById('regEmail').value;
+                const signupData = {
+                    regName: document.getElementById('regName').value,
+                    regNick: document.getElementById('regNick').value,
+                    regEmail: tempEmail,
+                    regDob: document.getElementById('regDob').value,
+                    regUni: document.getElementById('regUni').value,
+                    regCountry: document.getElementById('regCountry').value,
+                    regState: document.getElementById('regState').value,
+                    regCity: document.getElementById('regCity').value,
+                    regPass: document.getElementById('regPass').value
+                };
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(signupData)
+                });
+                if(res.ok) {
+                    document.getElementById('auth-screen').classList.add('hidden');
+                    document.getElementById('otp-screen').classList.remove('hidden');
+                }
             } else {
-                alert("Sign In Successful!");
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ identifier: document.getElementById('loginId').value, password: document.getElementById('loginPass').value })
+                });
+                if(res.ok) showDashboard();
+                else alert("Login Failed! Please verify your email or check credentials.");
             }
         };
 
-        function confirmOtp() {
-            if(document.getElementById('otpCode').value === "123456") {
-                alert("Verification Successful! Redirecting to Dashboard...");
-                location.reload(); // Refresh to show dashboard state
-            } else {
-                alert("Invalid Code. Hint: 123456");
-            }
+        async function confirmOtp() {
+            const res = await fetch('/api/verify', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ email: tempEmail, code: document.getElementById('otpCode').value })
+            });
+            if(res.ok) showDashboard();
+            else alert("Invalid Code. Try 123456.");
+        }
+
+        function showDashboard() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('otp-screen').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
         }
     </script>
 </body>
