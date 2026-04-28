@@ -1,51 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Student Gig Platform | Group 25</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GigPort | Student Gig Platform</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #ddd; }
-        button { background: #007bff; color: white; font-weight: bold; cursor: pointer; border: none; }
-        h2 { color: #333; text-align: center; }
+        :root { --primary: #004aad; --secondary: #00c2cb; --bg: #f8fafc; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); margin: 0; color: #1e293b; }
+        
+        /* Navigation */
+        nav { background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
+        
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Tabs */
+        .tabs { display: flex; gap: 10px; margin-bottom: 2rem; }
+        .tab-btn { padding: 10px 20px; border: none; background: #e2e8f0; border-radius: 20px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .tab-btn.active { background: var(--primary); color: white; }
+
+        /* Forms & Cards */
+        .section { display: none; }
+        .section.active { display: block; }
+        .card { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 1rem; transition: 0.2s; }
+        .card:hover { border-color: var(--secondary); transform: translateY(-2px); }
+        
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; }
+        
+        .gig-header { display: flex; justify-content: space-between; align-items: center; }
+        .price-tag { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Apply for a Gig</h2>
-        <form id="gigForm">
-            <input type="text" id="name" placeholder="Full Name" required>
-            <input type="email" id="email" placeholder="UniPort Email" required>
-            <input type="text" id="skill" placeholder="Your Major Skill (e.g. Java, Design)" required>
-            <button type="submit">Submit Information</button>
-        </form>
-        <p id="status" style="text-align:center; color: green;"></p>
+
+<nav>
+    <div class="logo">GigPort.</div>
+    <div>Group 25 Project</div>
+</nav>
+
+<div class="container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showSection('find')">Find Gigs</button>
+        <button class="tab-btn" onclick="showSection('post')">Post a Gig</button>
     </div>
 
-    <script>
-        document.getElementById('gigForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const status = document.getElementById('status');
-            
-            // Gather the data from the form
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                skill: document.getElementById('skill').value
-            };
+    <div id="find" class="section active">
+        <h2>Available Opportunities</h2>
+        <div id="gig-list">
+            </div>
+    </div>
 
-            // Send the data to your Vercel Backend
-            const response = await fetch('/api/apply', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
+    <div id="post" class="section">
+        <div class="card">
+            <h2>Create New Listing</h2>
+            <form id="postForm">
+                <input type="text" id="title" placeholder="Job Title (e.g. Assignment Help)" required>
+                <textarea id="desc" placeholder="Brief Description" rows="3" required></textarea>
+                <input type="text" id="pay" placeholder="Budget (e.g. ₦3,000)" required>
+                <button type="submit" class="btn-main">Publish Gig</button>
+            </form>
+        </div>
+    </div>
+</div>
 
-            if (response.ok) {
-                status.innerText = "Application Sent Successfully!";
-                document.getElementById('gigForm').reset();
-            }
+<script>
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    // Load Gigs from Backend
+    async function fetchGigs() {
+        const res = await fetch('/api/gigs');
+        const gigs = await res.json();
+        const container = document.getElementById('gig-list');
+        container.innerHTML = gigs.map(g => `
+            <div class="card">
+                <div class="gig-header">
+                    <h3>${g.title}</h3>
+                    <span class="price-tag">${g.pay}</span>
+                </div>
+                <p>${g.desc}</p>
+                <button class="btn-main" style="width:auto; padding: 8px 16px;">Apply Now</button>
+            </div>
+        `).join('');
+    }
+
+    // Post New Gig to Backend
+    document.getElementById('postForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newGig = {
+            title: document.getElementById('title').value,
+            desc: document.getElementById('desc').value,
+            pay: document.getElementById('pay').value
+        };
+
+        const res = await fetch('/api/post-gig', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(newGig)
         });
-    </script>
+
+        if(res.ok) {
+            alert("Gig Posted!");
+            document.getElementById('postForm').reset();
+            fetchGigs();
+            showSection('find');
+        }
+    });
+
+    fetchGigs();
+</script>
 </body>
 </html>
