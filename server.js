@@ -1,3 +1,5 @@
+const express = require('express');
+const app = express();
 app.post('/api/login', (req, res) => {
     const { identifier, password } = req.body;
     // This looks for a match in either the 'email' or 'nickname' field
