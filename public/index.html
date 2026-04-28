@@ -3,121 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GigPort | Student Marketplace</title>
+    <title>GigPort | Global Student Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
 </head>
-<body class="bg-slate-50">
+<body class="bg-slate-100 font-sans">
 
-    <div id="auth-box" class="min-h-screen flex items-center justify-center p-6">
-        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border">
-            <h1 class="text-3xl font-bold text-blue-700 text-center mb-6" id="auth-title">Create Account</h1>
+    <div id="auth-box" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl border">
+            <h1 class="text-4xl font-black text-blue-700 text-center mb-2">GigPort.</h1>
+            <p class="text-gray-500 text-center mb-8" id="auth-desc">Join the global student workforce</p>
             
-            <form id="authForm" class="space-y-4">
-                <input type="email" id="email" placeholder="UniPort Email" class="w-full p-3 border rounded-lg" required>
-                <input type="password" id="password" placeholder="Password" class="w-full p-3 border rounded-lg" required>
+            <form id="authForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="email" id="email" placeholder="Email Address" class="col-span-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                <input type="password" id="password" placeholder="Password" class="col-span-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+
+                <div id="signup-fields" class="col-span-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="fullName" placeholder="Full Name" class="p-3 border rounded-lg outline-none">
+                    <input type="text" id="nickName" placeholder="Nickname" class="p-3 border rounded-lg outline-none">
+                    <input type="date" id="dob" class="p-3 border rounded-lg outline-none">
+                    <select id="gender" class="p-3 border rounded-lg outline-none text-gray-500">
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="text" id="university" placeholder="Your University" class="col-span-full p-3 border rounded-lg outline-none">
+                    <input type="text" id="country" placeholder="Country" class="p-3 border rounded-lg outline-none">
+                    <input type="text" id="state" placeholder="State/Province" class="p-3 border rounded-lg outline-none">
+                    <input type="text" id="city" placeholder="City" class="p-3 border rounded-lg outline-none">
+                </div>
                 
-                <div class="flex items-start gap-2 text-xs text-gray-500">
+                <div class="col-span-full flex items-start gap-2 text-xs text-gray-500 mt-2">
                     <input type="checkbox" id="termsAgree" class="mt-1" required>
-                    <label for="termsAgree">I agree to the <button type="button" onclick="toggleTerms()" class="text-blue-600 underline">Terms and Conditions</button></label>
+                    <label for="termsAgree">I accept the <button type="button" onclick="toggleTerms()" class="text-blue-600 font-bold underline">Professional Terms & Conditions</button></label>
                 </div>
 
-                <button type="submit" id="authBtn" class="w-full bg-blue-700 text-white p-3 rounded-lg font-bold">Sign Up</button>
+                <button type="submit" id="authBtn" class="col-span-full bg-blue-700 text-white p-4 rounded-xl font-bold text-lg hover:bg-blue-800 transition-all shadow-lg">Create Account</button>
             </form>
 
-            <p class="text-center mt-6 text-sm">
+            <p class="text-center mt-6 text-sm text-gray-600">
                 <span id="toggle-text">Already have an account?</span>
-                <button onclick="switchAuth()" class="text-blue-700 font-bold underline" id="toggle-btn">Sign In</button>
+                <button onclick="switchAuth()" class="text-blue-700 font-bold hover:underline" id="toggle-btn">Sign In</button>
             </p>
         </div>
     </div>
 
-    <div id="terms-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-6 z-50">
-        <div class="bg-white p-6 rounded-xl max-w-lg w-full max-h-[70vh] overflow-y-auto">
-            <h2 class="text-xl font-bold mb-4">Terms and Conditions</h2>
-            <div class="text-sm text-gray-600 space-y-2">
-                <p>1. <strong>Eligibility:</strong> This platform is exclusively for University of Port Harcourt students.</p>
-                <p>2. <strong>Conduct:</strong> Users must provide honest details about gig requirements and payments.</p>
-                <p>3. <strong>Liability:</strong> GigPort is a bridge; we are not responsible for private payment disputes.</p>
-                <p>4. <strong>Privacy:</strong> Your data is stored securely and only shared with the gig owner when you apply.</p>
+    <div id="terms-modal" class="fixed inset-0 bg-slate-900/60 hidden flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-2xl max-w-xl w-full shadow-2xl">
+            <h2 class="text-2xl font-bold mb-4 text-blue-800">Terms & Conditions</h2>
+            <div class="text-sm text-gray-600 space-y-4 h-64 overflow-y-auto pr-4 custom-scroll">
+                <p><strong>1. Global Eligibility:</strong> GigPort is open to all students currently enrolled in recognized higher education institutions globally.</p>
+                <p><strong>2. User Verification:</strong> You agree to provide accurate information regarding your identity, university affiliation, and location.</p>
+                <p><strong>3. Safety & Security:</strong> We prioritize student safety. Any fraudulent gig postings or harassment will lead to immediate account termination.</p>
+                <p><strong>4. Payments:</strong> GigPort acts as a marketplace. Financial transactions are conducted between students; GigPort is not liable for payment defaults.</p>
+                <p><strong>5. Data Privacy:</strong> We protect your personal information and will not sell your data to third parties.</p>
             </div>
-            <button onclick="toggleTerms()" class="mt-6 w-full bg-gray-200 p-2 rounded-lg font-bold">Close</button>
-        </div>
-    </div>
-
-    <div id="app-screen" class="hidden">
-        <nav class="bg-blue-700 text-white p-4 shadow-lg flex justify-between">
-            <span class="font-bold text-xl">GigPort.</span>
-            <button onclick="location.reload()" class="text-sm opacity-80">Sign Out</button>
-        </nav>
-        
-        <div class="max-w-4xl mx-auto p-6">
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <button onclick="view('market')" class="p-4 bg-white border rounded-xl shadow-sm font-bold">Marketplace</button>
-                <button onclick="view('admin')" class="p-4 bg-white border rounded-xl shadow-sm font-bold">Admin Panel</button>
-            </div>
-
-            <div id="view-market">
-                </div>
-
-            <div id="view-admin" class="hidden">
-                <h3 class="font-bold mb-4">Applications for your Gigs</h3>
-                <div id="admin-data" class="space-y-2"></div>
-            </div>
+            <button onclick="toggleTerms()" class="mt-8 w-full bg-slate-100 hover:bg-slate-200 p-3 rounded-lg font-bold transition">I Understand</button>
         </div>
     </div>
 
     <script>
         let isLogin = false;
-        let userEmail = "";
 
         function toggleTerms() { document.getElementById('terms-modal').classList.toggle('hidden'); }
 
         function switchAuth() {
             isLogin = !isLogin;
-            document.getElementById('auth-title').innerText = isLogin ? "Sign In" : "Create Account";
-            document.getElementById('authBtn').innerText = isLogin ? "Sign In" : "Sign Up";
-            document.getElementById('toggle-text').innerText = isLogin ? "New here?" : "Already have an account?";
+            const signupFields = document.getElementById('signup-fields');
+            const title = document.getElementById('auth-title');
+            const btn = document.getElementById('authBtn');
+            const desc = document.getElementById('auth-desc');
+
+            signupFields.classList.toggle('hidden', isLogin);
+            btn.innerText = isLogin ? "Sign In" : "Create Account";
+            desc.innerText = isLogin ? "Welcome back, student" : "Join the global student workforce";
+            document.getElementById('toggle-text').innerText = isLogin ? "New to GigPort?" : "Already have an account?";
             document.getElementById('toggle-btn').innerText = isLogin ? "Sign Up" : "Sign In";
+            
+            // Toggle required attributes
+            const inputs = signupFields.querySelectorAll('input, select');
+            inputs.forEach(input => input.required = !isLogin);
         }
 
         document.getElementById('authForm').onsubmit = async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
             const route = isLogin ? '/api/login' : '/api/register';
+            
+            const formData = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+
+            if (!isLogin) {
+                Object.assign(formData, {
+                    name: document.getElementById('fullName').value,
+                    nickname: document.getElementById('nickName').value,
+                    dob: document.getElementById('dob').value,
+                    gender: document.getElementById('gender').value,
+                    university: document.getElementById('university').value,
+                    country: document.getElementById('country').value,
+                    state: document.getElementById('state').value,
+                    city: document.getElementById('city').value
+                });
+            }
 
             const res = await fetch(route, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify(formData)
             });
 
             if (res.ok) {
-                userEmail = email;
-                document.getElementById('auth-box').classList.add('hidden');
-                document.getElementById('app-screen').classList.remove('hidden');
-                loadMarket();
+                alert(isLogin ? "Welcome Back!" : "Registration Complete!");
             } else {
-                alert("Auth failed. Check credentials.");
+                alert("Action failed. Check your connection or details.");
             }
         };
-
-        async function view(v) {
-            document.getElementById('view-market').classList.toggle('hidden', v !== 'market');
-            document.getElementById('view-admin').classList.toggle('hidden', v !== 'admin');
-            if (v === 'admin') loadAdminData();
-        }
-
-        async function loadAdminData() {
-            const res = await fetch(`/api/my-applicants?email=${userEmail}`);
-            const data = await res.json();
-            document.getElementById('admin-data').innerHTML = data.map(app => `
-                <div class="bg-white p-4 rounded border">
-                    <p><strong>Gig:</strong> ${app.gigTitle}</p>
-                    <p><strong>Applicant:</strong> ${app.applicantEmail}</p>
-                </div>
-            `).join('') || "No applicants yet.";
-        }
     </script>
 </body>
 </html>
