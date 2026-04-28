@@ -1,16 +1,20 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-
+const path = require('path');
 const app = express();
-app.use(express.json());
-app.use(cors());
+const PORT = process.env.PORT || 3000;
 
-// This handles the main page
-app.get('/', (req, res) => {
-  res.send("Group 25 Student Gig Platform API is Live!");
+// This serves your HTML file automatically
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Your "Kitchen" (The API data)
+app.get('/api/gigs', (req, res) => {
+    res.json([
+        { id: 1, title: "Graphic Designer", pay: "₦10,000" },
+        { id: 2, title: "Content Writer", pay: "₦5,000" },
+        { id: 3, title: "Social Media Manager", pay: "₦15,000" }
+    ]);
 });
 
-// Port for Render to use
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
