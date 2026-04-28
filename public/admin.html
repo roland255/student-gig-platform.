@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel | Group 25</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #eee; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background: #007bff; color: white; }
+    </style>
+</head>
+<body>
+    <h2>Received Applications</h2>
+    <table id="adminTable">
+        <thead>
+            <tr><th>Name</th><th>Email</th><th>Skill</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        async function getApps() {
+            const res = await fetch('/api/applications');
+            const data = await res.json();
+            const tableBody = document.querySelector('#adminTable tbody');
+            tableBody.innerHTML = data.map(app => `
+                <tr>
+                    <td>${app.name}</td>
+                    <td>${app.email}</td>
+                    <td>${app.skill}</td>
+                </tr>
+            `).join('');
+        }
+        getApps();
+    </script>
+</body>
+</html>
