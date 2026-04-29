@@ -1,7 +1,6 @@
 {
   "name": "student-gig-platform",
   "version": "1.0.0",
-  "description": "GigPort Platform for Group 25",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
