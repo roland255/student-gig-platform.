@@ -11,205 +11,209 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
     <style>
-        .met { color: #22c55e; } 
-        .unmet { color: #cbd5e1; }
-        .iti { width: 100%; }
-        /* Matching the styling in your screenshot */
-        .custom-input {
-            background-color: #f8fafc;
-            border: 1px solid #f1f5f9;
-            border-radius: 1.5rem;
-            padding: 1.25rem;
-            transition: all 0.2s;
-        }
-        .custom-input:focus {
-            background-color: #ffffff;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        }
+        .met { color: #22c55e; transition: color 0.3s ease; } 
+        .unmet { color: #94a3b8; transition: color 0.3s ease; }
+        .hidden { display: none; }
+        .iti { width: 100%; } /* Fix for phone input width */
+        select:invalid { color: #94a3b8; }
+        option { color: #1e293b; }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-900">
 
-    <div class="min-h-screen flex items-center justify-center p-4">
+    <div class="min-h-screen flex items-center justify-center p-4 md:p-10">
         
-        <div class="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl w-full max-w-4xl">
-            <h1 class="text-4xl font-black text-blue-700 text-center mb-2">GigPort.</h1>
-            <p class="text-center text-slate-400 font-bold text-sm mb-10">Join the global student marketplace</p>
+        <div id="register-box" class="bg-white p-8 md:p-12 rounded-[40px] shadow-2xl w-full max-w-4xl border border-slate-100">
+            <h1 class="text-5xl font-black text-blue-700 text-center mb-2 tracking-tight">GigPort.</h1>
+            <p class="text-center text-slate-400 font-medium mb-8">Join the global student marketplace</p>
             
-            <form id="registrationForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <form id="registrationForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Full Name</label>
-                    <input type="text" placeholder="Roland Emereje" class="w-full custom-input outline-none" required>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-2">FULL NAME</label>
+                    <input type="text" placeholder="John Doe" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Nickname</label>
-                    <input type="text" placeholder="Roland987" class="w-full custom-input outline-none" required>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-2">NICKNAME</label>
+                    <input type="text" placeholder="johndoe22" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Email Address</label>
-                    <input type="email" placeholder="rolandemereje@gmail.com" class="w-full custom-input outline-none" required>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-2">EMAIL ADDRESS</label>
+                    <input type="email" placeholder="name@university.edu" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Phone Number</label>
-                    <input type="tel" id="phone" class="w-full custom-input outline-none" required>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-2">PHONE NUMBER</label>
+                    <input type="tel" id="phone" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Gender</label>
-                    <select class="w-full custom-input outline-none appearance-none cursor-pointer" required>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-2">GENDER</label>
+                    <select class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none appearance-none cursor-pointer" required>
                         <option value="" disabled selected>Select Gender</option>
                         <option>Male</option>
                         <option>Female</option>
-                        <option>Other</option>
+                        <option>Non-binary</option>
+                        <option>Prefer not to say</option>
                     </select>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">University</label>
-                    <input type="text" placeholder="University of Port Harcourt" class="w-full custom-input outline-none" required>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-2">UNIVERSITY</label>
+                    <input type="text" placeholder="Stanford University" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Country</label>
-                    <div class="relative">
-                        <select id="country" class="w-full custom-input outline-none appearance-none cursor-pointer" required>
-                            <option value="">Select Country</option>
-                        </select>
-                        <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none"></i>
-                    </div>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-2">COUNTRY</label>
+                    <select id="country" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none appearance-none" required>
+                        <option value="">Select Country</option>
+                    </select>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">State / Province</label>
-                    <div class="relative">
-                        <select id="state" class="w-full custom-input outline-none appearance-none cursor-pointer" disabled required>
-                            <option value="">Select State</option>
-                        </select>
-                        <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none"></i>
-                    </div>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-2">STATE / PROVINCE</label>
+                    <select id="state" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none appearance-none" disabled required>
+                        <option value="">Select State</option>
+                    </select>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">City</label>
-                    <div class="relative">
-                        <select id="city" class="w-full custom-input outline-none appearance-none cursor-pointer" disabled required>
-                            <option value="">Select City</option>
-                        </select>
-                        <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none"></i>
-                    </div>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-2">CITY</label>
+                    <select id="city" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none appearance-none" disabled required>
+                        <option value="">Select City</option>
+                    </select>
                 </div>
 
-                <div class="md:col-span-2 lg:col-span-3 space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Secure Password</label>
+                <div class="md:col-span-2 lg:col-span-3 space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-2">SECURE PASSWORD</label>
                     <div class="relative">
-                        <input type="password" id="regPass" oninput="checkStrength(this.value)" placeholder="••••••••" class="w-full custom-input outline-none" required>
-                        <button type="button" onclick="togglePass('regPass', 'regEye')" class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300">
+                        <input type="password" id="regPass" oninput="checkStrength(this.value)" placeholder="••••••••" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
+                        <button type="button" onclick="togglePass('regPass', 'regEye')" class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-blue-500">
                             <i id="regEye" class="fas fa-eye"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="md:col-span-2 lg:col-span-3 flex flex-wrap gap-4 px-2">
-                    <div id="val-up" class="unmet text-[9px] font-black uppercase flex items-center gap-2"><i class="fas fa-check-circle"></i> Uppercase</div>
-                    <div id="val-low" class="unmet text-[9px] font-black uppercase flex items-center gap-2"><i class="fas fa-check-circle"></i> Lowercase</div>
-                    <div id="val-spec" class="unmet text-[9px] font-black uppercase flex items-center gap-2"><i class="fas fa-check-circle"></i> Special</div>
-                    <div id="val-len" class="unmet text-[9px] font-black uppercase flex items-center gap-2"><i class="fas fa-check-circle"></i> 8+ Characters</div>
+                <div class="md:col-span-2 lg:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-4 px-2 py-2">
+                    <div id="val-up" class="unmet text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                        <i class="fas fa-shield-check"></i> Uppercase
+                    </div>
+                    <div id="val-low" class="unmet text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                        <i class="fas fa-shield-check"></i> Lowercase
+                    </div>
+                    <div id="val-spec" class="unmet text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                        <i class="fas fa-shield-check"></i> Special Char
+                    </div>
+                    <div id="val-len" class="unmet text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                        <i class="fas fa-shield-check"></i> 8+ Characters
+                    </div>
                 </div>
 
-                <button type="submit" class="md:col-span-2 lg:col-span-3 bg-blue-700 text-white p-5 rounded-3xl font-black text-xl hover:bg-blue-800 shadow-xl transition-all active:scale-95 mt-4">
-                    Create Account
+                <div class="md:col-span-2 lg:col-span-3 flex items-center gap-3 mt-4">
+                    <input type="checkbox" id="terms" required class="w-5 h-5 text-blue-600 rounded-lg">
+                    <label for="terms" class="text-sm text-slate-500">I agree to the <a href="#" class="text-blue-700 font-bold underline">Terms & Conditions</a></label>
+                </div>
+
+                <button type="submit" class="md:col-span-2 lg:col-span-3 bg-blue-700 text-white p-5 rounded-2xl font-black text-xl hover:bg-blue-800 shadow-xl shadow-blue-200 transition-all active:scale-[0.98] mt-4">
+                    Create My Account
                 </button>
             </form>
+
+            <p class="text-center mt-8 font-bold text-slate-400">
+                Already have an account? <button class="text-blue-700 hover:underline">Sign In</button>
+            </p>
         </div>
     </div>
 
     <script>
-        // Initialize Phone Input
+        // 1. Initialize Phone Input with Flags
         const phoneInput = document.querySelector("#phone");
         window.intlTelInput(phoneInput, {
             initialCountry: "auto",
-            geoIpLookup: callback => {
-                fetch("https://ipapi.co/json").then(res => res.json()).then(data => callback(data.country_code)).catch(() => callback("us"));
+            geoIpLookup: function(success, failure) {
+                fetch("https://ipapi.co/json").then(res => res.json()).then(data => success(data.country_code)).catch(() => success("us"));
             },
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
         });
 
-        // Professional Location API Integration
-        const countrySelect = document.getElementById('country');
-        const stateSelect = document.getElementById('state');
-        const citySelect = document.getElementById('city');
+        // 2. Location Logic (Countries/States/Cities)
+        // Using the public API: https://github.com/dr5hn/countries-states-cities-database
+        const config = {
+            cUrl: 'https://api.countrystatecity.in/v1/countries',
+            ckey: 'NHVvS0pREU9NRE5vR0U5N2xxR3Y4emU4Y3pWRE9BS3pWb0E2S09Sdg==' // Public Demo Key
+        };
 
-        const headers = new Headers();
-        headers.append("X-CSCAPI-KEY", "NHVvS0pREU9NRE5vR0U5N2xxR3Y4emU4Y3pWRE9BS3pWb0E2S09Sdg==");
+        const countrySelect = document.querySelector('#country'),
+              stateSelect = document.querySelector('#state'),
+              citySelect = document.querySelector('#city');
 
-        const requestOptions = { method: 'GET', headers: headers, redirect: 'follow' };
-
-        // 1. Load Countries
-        fetch("https://api.countrystatecity.in/v1/countries", requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                result.forEach(country => {
-                    let opt = document.createElement('option');
-                    opt.value = country.iso2;
-                    opt.innerHTML = country.name;
-                    countrySelect.appendChild(opt);
+        function loadCountries() {
+            fetch(config.cUrl, {headers: {"X-CSCAPI-KEY": config.ckey}})
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country.iso2;
+                    option.textContent = country.name;
+                    countrySelect.appendChild(option);
                 });
-            })
-            .catch(error => console.log('error', error));
+            });
+        }
 
-        // 2. Load States when Country changes
-        countrySelect.onchange = () => {
+        countrySelect.addEventListener('change', () => {
             stateSelect.disabled = false;
             stateSelect.innerHTML = '<option value="">Select State</option>';
             citySelect.innerHTML = '<option value="">Select City</option>';
             
-            fetch(`https://api.countrystatecity.in/v1/countries/${countrySelect.value}/states`, requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                    result.forEach(state => {
-                        let opt = document.createElement('option');
-                        opt.value = state.iso2;
-                        opt.innerHTML = state.name;
-                        stateSelect.appendChild(opt);
-                    });
+            const countryCode = countrySelect.value;
+            fetch(`${config.cUrl}/${countryCode}/states`, {headers: {"X-CSCAPI-KEY": config.ckey}})
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state.iso2;
+                    option.textContent = state.name;
+                    stateSelect.appendChild(option);
                 });
-        };
+            });
+        });
 
-        // 3. Load Cities when State changes
-        stateSelect.onchange = () => {
+        stateSelect.addEventListener('change', () => {
             citySelect.disabled = false;
             citySelect.innerHTML = '<option value="">Select City</option>';
             
-            fetch(`https://api.countrystatecity.in/v1/countries/${countrySelect.value}/states/${stateSelect.value}/cities`, requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                    result.forEach(city => {
-                        let opt = document.createElement('option');
-                        opt.value = city.name;
-                        opt.innerHTML = city.name;
-                        citySelect.appendChild(opt);
-                    });
+            const countryCode = countrySelect.value;
+            const stateCode = stateSelect.value;
+            fetch(`${config.cUrl}/${countryCode}/states/${stateCode}/cities`, {headers: {"X-CSCAPI-KEY": config.ckey}})
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city.name;
+                    option.textContent = city.name;
+                    citySelect.appendChild(option);
                 });
-        };
+            });
+        });
 
+        // 3. Password Strength
         function checkStrength(val) {
-            document.getElementById('val-up').className = /[A-Z]/.test(val) ? 'met text-[9px] font-black flex items-center gap-2' : 'unmet text-[9px] font-black flex items-center gap-2';
-            document.getElementById('val-low').className = /[a-z]/.test(val) ? 'met text-[9px] font-black flex items-center gap-2' : 'unmet text-[9px] font-black flex items-center gap-2';
-            document.getElementById('val-spec').className = /[!@#$%^&*(),.?":{}|<>]/.test(val) ? 'met text-[9px] font-black flex items-center gap-2' : 'unmet text-[9px] font-black flex items-center gap-2';
-            document.getElementById('val-len').className = val.length >= 8 ? 'met text-[9px] font-black flex items-center gap-2' : 'unmet text-[9px] font-black flex items-center gap-2';
+            document.getElementById('val-up').className = /[A-Z]/.test(val) ? 'met text-[10px] font-black' : 'unmet text-[10px] font-black';
+            document.getElementById('val-low').className = /[a-z]/.test(val) ? 'met text-[10px] font-black' : 'unmet text-[10px] font-black';
+            document.getElementById('val-spec').className = /[!@#$%^&*(),.?":{}|<>]/.test(val) ? 'met text-[10px] font-black' : 'unmet text-[10px] font-black';
+            document.getElementById('val-len').className = val.length >= 8 ? 'met text-[10px] font-black' : 'unmet text-[10px] font-black';
         }
 
         function togglePass(id, iconId) {
-            const input = document.getElementById(id);
+            const el = document.getElementById(id);
             const icon = document.getElementById(iconId);
-            input.type = input.type === 'password' ? 'text' : 'password';
+            el.type = el.type === 'password' ? 'text' : 'password';
             icon.classList.toggle('fa-eye-slash');
         }
+
+        window.onload = loadCountries;
     </script>
 </body>
 </html>
