@@ -7,141 +7,129 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        
         .met { color: #22c55e; transition: color 0.3s ease; } 
         .unmet { color: #94a3b8; transition: color 0.3s ease; }
-        
-        input::placeholder, select:invalid { color: #94a3b8; }
+        .hidden { display: none; }
+        input::placeholder { color: #94a3b8; }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-900">
 
-    <div id="auth-screen" class="min-h-screen flex items-center justify-center p-6">
+    <div class="min-h-screen flex items-center justify-center p-6">
         
-        <div id="sign-up-box" class="bg-white p-8 md:p-10 rounded-[40px] shadow-2xl w-full max-w-3xl border border-slate-100">
-            <h1 class="text-4xl font-black text-blue-700 text-center mb-6 tracking-tight">GigPort.</h1>
+        <div id="login-box" class="bg-white p-10 rounded-[40px] shadow-2xl w-full max-w-md border border-slate-100">
+            <h1 class="text-4xl font-black text-blue-700 text-center mb-8 tracking-tight">GigPort.</h1>
             
-            <div class="grid grid-cols-4 gap-3 mb-8">
-                <button type="button" onclick="socialLogin('Google')" class="flex items-center justify-center p-3 border border-slate-200 rounded-2xl hover:bg-slate-50 hover:border-blue-500 transition-all">
-                    <i class="fab fa-google text-red-500 text-xl"></i>
-                </button>
-                <button type="button" onclick="socialLogin('GitHub')" class="flex items-center justify-center p-3 border border-slate-200 rounded-2xl hover:bg-slate-50 hover:border-blue-500 transition-all">
-                    <i class="fab fa-github text-slate-900 text-xl"></i>
-                </button>
-                <button type="button" onclick="socialLogin('Apple')" class="flex items-center justify-center p-3 border border-slate-200 rounded-2xl hover:bg-slate-50 hover:border-blue-500 transition-all">
-                    <i class="fab fa-apple text-slate-900 text-xl"></i>
-                </button>
-                <button type="button" onclick="socialLogin('Discord')" class="flex items-center justify-center p-3 border border-slate-200 rounded-2xl hover:bg-slate-50 hover:border-blue-500 transition-all">
-                    <i class="fab fa-discord text-indigo-500 text-xl"></i>
-                </button>
-            </div>
-
-            <form id="registerForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" placeholder="Full Name" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
-                <input type="text" placeholder="Nickname" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
+            <form class="space-y-4">
+                <input type="text" placeholder="Nickname or Email" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                 
-                <input type="email" placeholder="Email" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
-                <input type="tel" placeholder="Phone Number" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
-
                 <div class="relative">
-                    <select class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none appearance-none cursor-pointer" required>
-                        <option value="" disabled selected>Gender</option>
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Other</option>
-                    </select>
-                    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                        <i class="fas fa-chevron-down text-xs"></i>
-                    </div>
-                </div>
-
-                <div class="relative">
-                    <select class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none appearance-none cursor-pointer" required>
-                        <option value="" disabled selected>Account Category</option>
-                        <option>Student Freelancer</option>
-                        <option>Gig Employer</option>
-                    </select>
-                    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                        <i class="fas fa-chevron-down text-xs"></i>
-                    </div>
-                </div>
-
-                <input type="text" placeholder="Country" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="text" placeholder="State/Prov" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
-                    <input type="text" placeholder="City" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
-                </div>
-
-                <input type="text" placeholder="University Name" class="col-span-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
-                
-                <div class="col-span-full relative">
-                    <input type="password" id="regPass" oninput="checkStrength(this.value)" placeholder="Password" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
-                    <button type="button" onclick="togglePass('regPass', 'eyeIcon')" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-                        <i id="eyeIcon" class="fas fa-eye"></i>
+                    <input type="password" id="loginPass" placeholder="Password" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    <button type="button" onclick="togglePass('loginPass', 'loginEye')" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+                        <i id="loginEye" class="fas fa-eye-slash"></i>
                     </button>
                 </div>
 
-                <div class="col-span-full grid grid-cols-2 md:grid-cols-4 gap-2 px-2 text-[10px] font-bold uppercase tracking-wider">
-                    <div id="val-up" class="unmet"><i class="fas fa-check-circle mr-1"></i> Uppercase</div>
-                    <div id="val-low" class="unmet"><i class="fas fa-check-circle mr-1"></i> Lowercase</div>
-                    <div id="val-spec" class="unmet"><i class="fas fa-check-circle mr-1"></i> Special Char</div>
-                    <div id="val-len" class="unmet"><i class="fas fa-check-circle mr-1"></i> 8+ Characters</div>
+                <div class="flex items-center gap-2 px-1">
+                    <input type="checkbox" id="remember" class="w-4 h-4 text-blue-600 border-slate-300 rounded cursor-pointer" checked>
+                    <label for="remember" class="text-[12px] text-slate-500">I agree to the <span class="text-blue-700 font-bold cursor-pointer">Terms of Service</span></label>
                 </div>
 
-                <div class="col-span-full flex items-start gap-3 px-1 mt-2">
-                    <input type="checkbox" id="termsCheck" required class="mt-1 w-4 h-4 text-blue-600 border-slate-300 rounded cursor-pointer">
-                    <label for="termsCheck" class="text-[12px] text-slate-500 leading-relaxed cursor-pointer">
-                        I agree to the <button type="button" class="text-blue-700 font-bold underline">Terms & Conditions</button>
-                    </label>
-                </div>
-
-                <button type="submit" class="col-span-full bg-blue-700 text-white p-5 rounded-2xl font-black text-lg hover:bg-blue-800 shadow-xl mt-4 transition-all active:scale-[0.98]">Create Account</button>
+                <button type="submit" class="w-full bg-blue-600 text-white p-4 rounded-full font-bold text-lg hover:bg-blue-700 shadow-lg transition-all active:scale-[0.98]">Sign In</button>
             </form>
 
-            <button class="w-full mt-8 text-sm font-bold text-blue-700 hover:underline text-center">Already have an account? Sign In</button>
+            <div class="relative my-8 text-center">
+                <hr class="border-slate-100">
+                <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Or continue with</span>
+            </div>
+
+            <div class="grid grid-cols-4 gap-3 mb-8">
+                <button onclick="socialLogin('Google')" class="flex items-center justify-center p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-all"><i class="fab fa-google text-red-500"></i></button>
+                <button onclick="socialLogin('GitHub')" class="flex items-center justify-center p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-all"><i class="fab fa-github"></i></button>
+                <button onclick="socialLogin('Apple')" class="flex items-center justify-center p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-all"><i class="fab fa-apple"></i></button>
+                <button onclick="socialLogin('Discord')" class="flex items-center justify-center p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-all"><i class="fab fa-discord text-indigo-500"></i></button>
+            </div>
+
+            <button onclick="toggleView('register')" class="w-full text-sm font-bold text-blue-700 hover:underline">Create an Account</button>
+        </div>
+
+        <div id="register-box" class="bg-white p-10 rounded-[40px] shadow-2xl w-full max-w-2xl border border-slate-100 hidden">
+            <h1 class="text-4xl font-black text-blue-700 text-center mb-6 tracking-tight">GigPort.</h1>
+            
+            <div class="grid grid-cols-4 gap-3 mb-8">
+                <button onclick="socialLogin('Google')" class="flex items-center justify-center p-3 border border-slate-100 rounded-2xl"><i class="fab fa-google text-red-500"></i></button>
+                <button onclick="socialLogin('GitHub')" class="flex items-center justify-center p-3 border border-slate-100 rounded-2xl"><i class="fab fa-github"></i></button>
+                <button onclick="socialLogin('Apple')" class="flex items-center justify-center p-3 border border-slate-100 rounded-2xl"><i class="fab fa-apple"></i></button>
+                <button onclick="socialLogin('Discord')" class="flex items-center justify-center p-3 border border-slate-100 rounded-2xl"><i class="fab fa-discord text-indigo-500"></i></button>
+            </div>
+
+            <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" placeholder="Full Name" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none" required>
+                <input type="text" placeholder="Nickname" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none" required>
+                <input type="email" placeholder="Email" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none" required>
+                <input type="tel" placeholder="Phone Number" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none" required>
+
+                <select class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none appearance-none" required>
+                    <option value="" disabled selected>Gender</option>
+                    <option>Male</option><option>Female</option><option>Other</option>
+                </select>
+
+                <input type="text" placeholder="Country" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none" required>
+                <input type="text" placeholder="State/Province" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none" required>
+                <input type="text" placeholder="City" class="p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none" required>
+                
+                <input type="text" placeholder="University" class="col-span-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none" required>
+                
+                <div class="col-span-full relative">
+                    <input type="password" id="regPass" oninput="checkStrength(this.value)" placeholder="Password" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none" required>
+                    <button type="button" onclick="togglePass('regPass', 'regEye')" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+                        <i id="regEye" class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+                <div class="col-span-full grid grid-cols-2 md:grid-cols-4 gap-2 px-2 text-[10px] font-bold uppercase">
+                    <div id="val-up" class="unmet"><i class="fas fa-circle text-[6px] mr-1"></i> Uppercase</div>
+                    <div id="val-low" class="unmet"><i class="fas fa-circle text-[6px] mr-1"></i> Lowercase</div>
+                    <div id="val-spec" class="unmet"><i class="fas fa-circle text-[6px] mr-1"></i> Special</div>
+                    <div id="val-len" class="unmet"><i class="fas fa-circle text-[6px] mr-1"></i> 8+ Chars</div>
+                </div>
+
+                <button type="submit" class="col-span-full bg-blue-600 text-white p-4 rounded-full font-bold text-lg mt-4">Create Account</button>
+            </form>
+
+            <button onclick="toggleView('login')" class="w-full mt-6 text-sm font-bold text-blue-700 hover:underline text-center">Already have an account? Sign In</button>
         </div>
     </div>
 
     <script>
+        function toggleView(view) {
+            const login = document.getElementById('login-box');
+            const register = document.getElementById('register-box');
+            if (view === 'register') {
+                login.classList.add('hidden');
+                register.classList.remove('hidden');
+            } else {
+                register.classList.add('hidden');
+                login.classList.remove('hidden');
+            }
+        }
+
         function togglePass(inputId, iconId) {
             const input = document.getElementById(inputId);
             const icon = document.getElementById(iconId);
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                input.type = "password";
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
+            const isPass = input.type === "password";
+            input.type = isPass ? "text" : "password";
+            icon.className = isPass ? 'fas fa-eye' : 'fas fa-eye-slash';
         }
 
         function checkStrength(val) {
-            const criteria = {
-                'val-up': /[A-Z]/.test(val),
-                'val-low': /[a-z]/.test(val),
-                'val-spec': /[!@#$%^&*(),.?":{}|<>]/.test(val),
-                'val-len': val.length >= 8
-            };
-
-            for (const [id, passed] of Object.entries(criteria)) {
-                const el = document.getElementById(id);
-                if (passed) {
-                    el.classList.replace('unmet', 'met');
-                } else {
-                    el.classList.replace('met', 'unmet');
-                }
-            }
+            document.getElementById('val-up').className = /[A-Z]/.test(val) ? 'met' : 'unmet';
+            document.getElementById('val-low').className = /[a-z]/.test(val) ? 'met' : 'unmet';
+            document.getElementById('val-spec').className = /[!@#$%^&*(),.?":{}|<>]/.test(val) ? 'met' : 'unmet';
+            document.getElementById('val-len').className = val.length >= 8 ? 'met' : 'unmet';
         }
 
         function socialLogin(p) { alert(`Connecting to ${p}...`); }
-        
-        document.getElementById('registerForm').onsubmit = (e) => {
-            e.preventDefault();
-            alert('Form Submitted Successfully!');
-        };
     </script>
 </body>
 </html>
