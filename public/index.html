@@ -6,48 +6,42 @@
     <title>GigPort | Global Student Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-900">
 
     <div id="auth-screen" class="min-h-screen flex items-center justify-center p-4">
-        
         <div id="sign-in-box" class="bg-white p-10 rounded-[30px] shadow-2xl w-full max-w-md border border-slate-100">
             <h1 class="text-4xl font-black text-blue-700 text-center mb-10 tracking-tight">GigPort.</h1>
-            
             <form id="loginForm" class="space-y-6">
                 <input type="text" id="loginId" placeholder="Nickname or Email" class="w-full p-4.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                
                 <div class="relative">
                     <input type="password" id="loginPass" placeholder="Password" class="w-full p-4.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                     <button type="button" onclick="togglePass('loginPass', 'eyeIcon1')" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
                         <i id="eyeIcon1" class="fas fa-eye"></i>
                     </button>
                 </div>
-
                 <div class="flex items-start gap-3 px-1">
-                    <input type="checkbox" id="signInTerms" required class="mt-1 w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer">
+                    <input type="checkbox" id="signInTerms" required class="mt-1 w-4 h-4 text-blue-600 border-slate-300 rounded cursor-pointer">
                     <label for="signInTerms" class="text-[11px] text-slate-500 leading-relaxed cursor-pointer">
-                        I agree to the <button type="button" onclick="showTerms()" class="text-blue-600 font-bold underline">Terms of Service</button>
+                        I agree to the <button type="button" onclick="openModal()" class="text-blue-600 font-bold underline">Terms of Service</button>
                     </label>
                 </div>
-
                 <button type="submit" class="w-full bg-blue-700 text-white p-4.5 rounded-2xl font-black text-lg hover:bg-blue-800 shadow-lg transition-all">Sign In</button>
             </form>
-
             <div class="mt-8">
-                <div class="relative flex py-3 items-center">
-                    <div class="flex-grow border-t border-slate-200"></div>
-                    <span class="flex-shrink mx-4 text-slate-400 text-xs font-bold uppercase">Or continue with</span>
-                    <div class="flex-grow border-t border-slate-200"></div>
-                </div>
+                <div class="relative flex py-3 items-center"><div class="flex-grow border-t border-slate-200"></div><span class="flex-shrink mx-4 text-slate-400 text-xs font-bold uppercase">Or continue with</span><div class="flex-grow border-t border-slate-200"></div></div>
                 <div class="grid grid-cols-4 gap-3 mt-4">
-                    <button onclick="socialLogin('Google')" class="p-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all"><i class="fab fa-google text-red-500 text-xl"></i></button>
-                    <button onclick="socialLogin('GitHub')" class="p-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all"><i class="fab fa-github text-slate-900 text-xl"></i></button>
-                    <button onclick="socialLogin('Apple')" class="p-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all"><i class="fab fa-apple text-slate-900 text-xl"></i></button>
-                    <button onclick="socialLogin('Discord')" class="p-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all"><i class="fab fa-discord text-indigo-500 text-xl"></i></button>
+                    <button onclick="socialLogin('Google')" class="p-3 border border-slate-200 rounded-xl hover:bg-slate-50"><i class="fab fa-google text-red-500 text-xl"></i></button>
+                    <button onclick="socialLogin('GitHub')" class="p-3 border border-slate-200 rounded-xl hover:bg-slate-50"><i class="fab fa-github text-slate-900 text-xl"></i></button>
+                    <button onclick="socialLogin('Apple')" class="p-3 border border-slate-200 rounded-xl hover:bg-slate-50"><i class="fab fa-apple text-slate-900 text-xl"></i></button>
+                    <button onclick="socialLogin('Discord')" class="p-3 border border-slate-200 rounded-xl hover:bg-slate-50"><i class="fab fa-discord text-indigo-500 text-xl"></i></button>
                 </div>
             </div>
-
             <div class="text-center mt-8">
                 <button onclick="toggleAuth()" class="text-sm font-bold text-blue-700 hover:underline">Create an Account</button>
             </div>
@@ -55,47 +49,59 @@
 
         <div id="sign-up-box" class="hidden bg-white p-10 rounded-[30px] shadow-2xl w-full max-w-2xl border border-slate-100">
             <h1 class="text-4xl font-black text-blue-700 text-center mb-8 tracking-tight">GigPort.</h1>
-            
             <div class="grid grid-cols-4 gap-3 mb-8">
-                <button onclick="socialLogin('Google')" class="flex items-center justify-center p-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all"><i class="fab fa-google text-red-500 text-xl"></i></button>
-                <button onclick="socialLogin('GitHub')" class="flex items-center justify-center p-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all"><i class="fab fa-github text-slate-900 text-xl"></i></button>
-                <button onclick="socialLogin('Apple')" class="flex items-center justify-center p-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all"><i class="fab fa-apple text-slate-900 text-xl"></i></button>
-                <button onclick="socialLogin('Discord')" class="flex items-center justify-center p-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all"><i class="fab fa-discord text-indigo-500 text-xl"></i></button>
+                <button onclick="socialLogin('Google')" class="flex items-center justify-center p-3 border border-slate-200 rounded-xl hover:bg-slate-50"><i class="fab fa-google text-red-500 text-xl"></i></button>
+                <button onclick="socialLogin('GitHub')" class="flex items-center justify-center p-3 border border-slate-200 rounded-xl hover:bg-slate-50"><i class="fab fa-github text-slate-900 text-xl"></i></button>
+                <button onclick="socialLogin('Apple')" class="flex items-center justify-center p-3 border border-slate-200 rounded-xl hover:bg-slate-50"><i class="fab fa-apple text-slate-900 text-xl"></i></button>
+                <button onclick="socialLogin('Discord')" class="flex items-center justify-center p-3 border border-slate-200 rounded-xl hover:bg-slate-50"><i class="fab fa-discord text-indigo-500 text-xl"></i></button>
             </div>
-
-            <div class="relative flex py-3 items-center mb-8">
-                <div class="flex-grow border-t border-slate-200"></div>
-                <span class="flex-shrink mx-4 text-slate-400 text-xs font-bold uppercase">Or register manually</span>
-                <div class="flex-grow border-t border-slate-200"></div>
-            </div>
-
             <form id="registerForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input type="text" id="regName" placeholder="Full Name" class="p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none" required>
                 <input type="text" id="regNick" placeholder="Nickname" class="p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none" required>
                 <input type="email" id="regEmail" placeholder="Email" class="p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none" required>
                 <input type="date" id="regDob" class="p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none" required>
                 <input type="text" id="regUni" placeholder="University" class="col-span-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none" required>
-                <input type="text" id="regCountry" placeholder="Country" class="p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none" required>
-                <input type="text" id="regState" placeholder="State" class="p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none" required>
-                <input type="text" id="regCity" placeholder="City" class="p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none" required>
-                
                 <div class="col-span-full relative">
                     <input type="password" id="regPass" placeholder="Password" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none" required>
                     <button type="button" onclick="togglePass('regPass', 'eyeIcon2')" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
                         <i id="eyeIcon2" class="fas fa-eye"></i>
                     </button>
                 </div>
-                
                 <div class="col-span-full flex items-start gap-3 px-1 mt-2">
-                    <input type="checkbox" id="termsCheck" required class="mt-1 w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer">
+                    <input type="checkbox" id="termsCheck" required class="mt-1 w-4 h-4 text-blue-600 border-slate-300 rounded cursor-pointer">
                     <label for="termsCheck" class="text-[11px] text-slate-500 leading-relaxed cursor-pointer">
-                        I agree to the <button type="button" onclick="showTerms()" class="text-blue-600 font-bold underline">Terms & Conditions</button>
+                        I agree to the <button type="button" onclick="openModal()" class="text-blue-600 font-bold underline">Terms & Conditions</button>
                     </label>
                 </div>
-
                 <button type="submit" class="col-span-full bg-blue-700 text-white p-4.5 rounded-2xl font-black text-lg hover:bg-blue-800 shadow-xl mt-4 transition-all">Create Account</button>
             </form>
             <button onclick="toggleAuth()" class="w-full mt-6 text-sm font-bold text-blue-700 hover:underline text-center">Already have an account? Sign In</button>
+        </div>
+    </div>
+
+    <div id="terms-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <h3 class="text-xl font-black text-slate-800">Terms & Conditions</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-times-circle text-2xl"></i></button>
+            </div>
+            <div class="p-8 overflow-y-auto custom-scrollbar text-sm text-slate-600 leading-relaxed space-y-4">
+                <p class="font-bold text-slate-800">Last Updated: April 2026</p>
+                <h4 class="font-black text-blue-700 uppercase tracking-wider text-xs">1. User Eligibility</h4>
+                <p>GigPort is strictly for university students. By creating an account, you confirm you are currently enrolled in a higher education institution and possess a valid student ID or email.</p>
+                
+                <h4 class="font-black text-blue-700 uppercase tracking-wider text-xs">2. Gig Standards</h4>
+                <p>Users must provide accurate descriptions of services. Academic dishonesty, including the sale of pre-written exams or plagiarism services, is strictly prohibited and will result in a permanent ban.</p>
+                
+                <h4 class="font-black text-blue-700 uppercase tracking-wider text-xs">3. Payments & Security</h4>
+                <p>All payments are held in escrow until the gig requester confirms successful delivery. GigPort is not liable for off-platform transactions.</p>
+                
+                <h4 class="font-black text-blue-700 uppercase tracking-wider text-xs">4. Privacy Policy</h4>
+                <p>We value your data. We do not sell your personal info. Your location and University data are used solely to match you with local student opportunities.</p>
+            </div>
+            <div class="p-6 border-t border-slate-100 bg-slate-50/50">
+                <button onclick="closeModal()" class="w-full bg-slate-900 text-white p-4 rounded-xl font-bold hover:bg-blue-700 transition-all">I Understand</button>
+            </div>
         </div>
     </div>
 
@@ -131,12 +137,9 @@
     </div>
 
     <script>
-        let isSignupActive = false;
-        let userEmail = "";
-
-        function socialLogin(provider) {
-            alert(`Connecting to ${provider}... In a production app, this would open a popup for authentication.`);
-        }
+        // Modal Logic
+        function openModal() { document.getElementById('terms-modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('terms-modal').classList.add('hidden'); }
 
         function togglePass(inputId, iconId) {
             const input = document.getElementById(inputId);
@@ -151,12 +154,11 @@
         }
 
         function toggleAuth() {
-            isSignupActive = !isSignupActive;
-            document.getElementById('sign-in-box').classList.toggle('hidden', isSignupActive);
-            document.getElementById('sign-up-box').classList.toggle('hidden', !isSignupActive);
+            const isSignup = document.getElementById('sign-in-box').classList.toggle('hidden');
+            document.getElementById('sign-up-box').classList.toggle('hidden', !isSignup);
         }
 
-        function showTerms() { alert("GigPort Terms: Standard student usage policy applies."); }
+        function socialLogin(provider) { alert(`Redirecting to ${provider} OAuth...`); }
 
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
@@ -168,43 +170,13 @@
                     password: document.getElementById('loginPass').value
                 })
             });
-            if(res.ok) showDashboard();
-            else alert("Invalid credentials.");
+            if(res.ok) showDashboard(); else alert("Invalid Login.");
         };
-
-        document.getElementById('registerForm').onsubmit = async (e) => {
-            e.preventDefault();
-            userEmail = document.getElementById('regEmail').value;
-            const res = await fetch('/api/register', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    regName: document.getElementById('regName').value,
-                    regEmail: userEmail
-                })
-            });
-            if(res.ok) {
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('otp-screen').classList.remove('hidden');
-            }
-        };
-
-        async function confirmOtp() {
-            const res = await fetch('/api/verify', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ code: document.getElementById('otpCode').value })
-            });
-            if(res.ok) showDashboard();
-            else alert("Incorrect code.");
-        }
 
         function showDashboard() {
             document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('otp-screen').classList.add('hidden');
             document.getElementById('action-center').classList.remove('hidden');
         }
     </script>
 </body>
-                                                                                                                                                                                                                               </html>
-                
+</html>
