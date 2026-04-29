@@ -1,1 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GigPort | Global Student Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 font-sans text-slate-900">
 
+    <div id="auth-screen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-2xl border border-slate-100">
+            <h1 class="text-4xl font-black text-blue-700 text-center mb-8">GigPort.</h1>
+            
+            <div id="auth-box">
+                <form id="loginForm" class="space-y-4">
+                    <div id="login-fields" class="space-y-4">
+                        <input type="text" id="loginId" placeholder="Nickname or Email" class="w-full p-4 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                        <div>
+                            <input type="password" id="loginPass" placeholder="Password" class="w-full p-4 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                            <div class="text-right mt-1">
+                                <button type="button" onclick="forgotPass()" class="text-xs font-bold text-blue-600 hover:underline">Forgot password?</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="signup-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="regName" placeholder="Full Name" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                        <input type="text" id="regNick" placeholder="Nickname" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                        <input type="email" id="regEmail" placeholder="Email" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                        <input type="date" id="regDob" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                        <input type="text" id="regUni" placeholder="University" class="col-span-full p-4 bg-slate-50 border rounded-xl outline-none">
+                        <input type="text" id="regCountry" placeholder="Country" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                        <input type="text" id="regState" placeholder="State" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                        <input type="text" id="regCity" placeholder="City" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                        <input type="password" id="regPass" placeholder="Password" class="col-span-full p-4 bg-slate-50 border rounded-xl outline-none">
+                        <div class="col-span-full flex items-center gap-2 text-xs text-slate-400">
+                            <input type="checkbox" required> <span>I agree to the <button type="button" onclick="showTerms()" class="text-blue-600 font-bold underline">Terms & Conditions</button></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="w-full bg-blue-700 text-white p-4 rounded-2xl font-black shadow-xl">Sign In</button>
+                </form>
+                <button onclick="switchAuth()" class="w-full mt-6 text-blue-700 font-bold" id="toggle-btn">Create an Account</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="action-center" class="hidden min-h-screen bg-slate-50 flex flex-col">
+        <nav class="bg-white border-b p-4 flex justify-between items-center px-10">
+            <span class="text-2xl font-black text-blue-700">GigPort.</span>
+            <button onclick="location.reload()" class="text-sm font-bold text-red-500">Sign Out</button>
+        </nav>
+        <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+            <h2 class="text-4xl font-black mb-12">How would you like to proceed?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+                <div class="bg-white p-10 rounded-[40px] shadow-xl border-2 border-transparent hover:border-blue-600 transition cursor-pointer">
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-search"></i></div>
+                    <h3 class="text-2xl font-black mb-2">Apply for Gigs</h3>
+                    <p class="text-slate-500 text-sm">Find work posted by other students.</p>
+                </div>
+                <div class="bg-slate-900 p-10 rounded-[40px] shadow-xl border-2 border-transparent hover:border-blue-500 transition cursor-pointer">
+                    <div class="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-plus"></i></div>
+                    <h3 class="text-2xl font-black text-white mb-2">Post a Gig</h3>
+                    <p class="text-slate-400 text-sm">Hire student talent for your tasks.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="otp-screen" class="hidden fixed inset-0 bg-blue-700 flex items-center justify-center p-4">
+        <div class="bg-white p-10 rounded-3xl text-center max-w-sm w-full">
+            <h2 class="text-2xl font-bold mb-8">Enter 6-Digit Code</h2>
+            <input type="text" id="otpCode" maxlength="6" class="w-full text-center text-4xl font-black p-4 bg-slate-50 border rounded-2xl mb-8 outline-none" placeholder="000000">
+            <button onclick="confirmOtp()" class="w-full bg-blue-700 text-white p-4 rounded-xl font-bold">Verify</button>
+        </div>
+    </div>
+
+    <script>
+        let isSignup = false;
+        let tempEmail = "";
+
+        function switchAuth() {
+            isSignup = !isSignup;
+            document.getElementById('login-fields').classList.toggle('hidden', isSignup);
+            document.getElementById('signup-fields').classList.toggle('hidden', !isSignup);
+            document.getElementById('submitBtn').innerText = isSignup ? "Create Account" : "Sign In";
+            document.getElementById('toggle-btn').innerText = isSignup ? "Sign In" : "Create an Account";
+        }
+
+        function forgotPass() { alert("Password reset link sent to your email!"); }
+        function showTerms() { alert("Terms & Conditions: Global Student platform. Be respectful. Secure payments only."); }
+
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            if(isSignup) {
+                tempEmail = document.getElementById('regEmail').value;
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ regEmail: tempEmail, regNick: document.getElementById('regNick').value, regPass: document.getElementById('regPass').value })
+                });
+                if(res.ok) {
+                    document.getElementById('auth-screen').classList.add('hidden');
+                    document.getElementById('otp-screen').classList.remove('hidden');
+                }
+            } else {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ identifier: document.getElementById('loginId').value, password: document.getElementById('loginPass').value })
+                });
+                if(res.ok) showDashboard();
+                else alert("Login failed. Verify your email or check credentials.");
+            }
+        };
+
+        async function confirmOtp() {
+            const res = await fetch('/api/verify', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ email: tempEmail, code: document.getElementById('otpCode').value })
+            });
+            if(res.ok) showDashboard();
+            else alert("Invalid Code. Use 123456.");
+        }
+
+        function showDashboard() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('otp-screen').classList.add('hidden');
+            document.getElementById('action-center').classList.remove('hidden');
+        }
+    </script>
+</body>
+      </html>
