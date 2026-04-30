@@ -3,300 +3,316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GigPort | Connect & Earn</title>
+    <title>GigPort | Student Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
     <style>
-        /* Auth & Global Styles */
+        :root { --primary: #1d4ed8; }
+        .dark { background-color: #0f172a; color: #f1f5f9; }
+        .dark .bg-white { background-color: #1e293b; color: #f1f5f9; border-color: #334155; }
+        .dark .bg-slate-50 { background-color: #0f172a; }
+        .dark .text-slate-800 { color: #f1f5f9; }
+        .dark .custom-input { background-color: #334155; border-color: #475569; color: white; }
+
         .custom-input { background-color: #f8fafc; border: 1px solid #f1f5f9; border-radius: 1.25rem; padding: 1rem 1.25rem; width: 100%; outline: none; transition: all 0.2s; }
-        .custom-input:focus { border-color: #3b82f6; background-color: #fff; }
-        label { font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 0.25rem; display: block; margin-left: 0.5rem; }
         .hidden { display: none !important; }
         .requirement { font-size: 10px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap: 4px; color: #cbd5e1; }
         .requirement.met { color: #22c55e; }
-        .otp-input { width: 2.8rem; height: 3.5rem; text-align:center; font-size: 1.5rem; font-weight: bold; border: 2px solid #e2e8f0; border-radius: 12px; }
-
-        /* Dashboard Sliding Sidebar */
-        #sidebar { transition: transform 0.3s ease; z-index: 80; }
-        .sidebar-closed { transform: translateX(-100%); }
-        .sidebar-open { transform: translateX(0); }
+        
+        #sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; }
         .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 16px; color: #64748b; font-weight: 600; cursor: pointer; }
-        .sidebar-link:hover, .sidebar-link.active { background: #eff6ff; color: #1d4ed8; }
-
-        /* Scrollbars */
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        .sidebar-link.active { background: #eff6ff; color: #1d4ed8; }
+        .dark .sidebar-link.active { background: #1e293b; color: #3b82f6; }
+        
+        .modal-overlay { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
     </style>
 </head>
-<body class="bg-slate-50 font-sans min-h-screen flex items-center justify-center overflow-x-hidden">
+<body class="bg-slate-50 font-sans min-h-screen flex items-center justify-center transition-colors duration-300">
 
-    <div id="auth-container" class="w-full max-w-4xl bg-white rounded-[3rem] shadow-2xl p-8 md:p-12 border border-slate-100 m-4">
+    <div id="auth-container" class="w-full max-w-4xl bg-white rounded-[3rem] shadow-2xl p-8 md:p-12 m-4 relative overflow-hidden">
         <div class="text-center mb-6">
             <h1 class="text-4xl font-black text-blue-700">GigPort.</h1>
-            <p class="text-slate-400 font-bold text-sm">Empowering Student Freelancers</p>
+            <p class="text-slate-400 font-bold text-sm">Empowering Student Careers</p>
         </div>
 
         <div class="flex justify-center gap-4 mb-8">
-            <button class="p-4 border border-slate-100 rounded-2xl hover:bg-slate-50"><i class="fab fa-google text-red-500"></i></button>
-            <button class="p-4 border border-slate-100 rounded-2xl hover:bg-slate-50"><i class="fab fa-github"></i></button>
-            <button class="p-4 border border-slate-100 rounded-2xl hover:bg-slate-50"><i class="fab fa-apple"></i></button>
-            <button class="p-4 border border-slate-100 rounded-2xl hover:bg-slate-50"><i class="fab fa-discord text-indigo-500"></i></button>
+            <button class="p-4 border rounded-2xl hover:bg-slate-50"><i class="fab fa-google text-red-500"></i></button>
+            <button class="p-4 border rounded-2xl hover:bg-slate-50"><i class="fab fa-github"></i></button>
+            <button class="p-4 border rounded-2xl hover:bg-slate-50"><i class="fab fa-apple"></i></button>
+            <button class="p-4 border rounded-2xl hover:bg-slate-50"><i class="fab fa-discord text-indigo-500"></i></button>
         </div>
 
         <div id="login-view">
             <form onsubmit="event.preventDefault(); showDashboard();" class="max-w-md mx-auto space-y-4">
-                <input type="text" placeholder="Email or Nickname" class="custom-input" required>
+                <input type="text" placeholder="Email" class="custom-input" required>
                 <input type="password" placeholder="Password" class="custom-input" required>
-                <button type="submit" class="w-full bg-blue-600 text-white p-4 rounded-full font-bold text-lg hover:bg-blue-700">Sign In</button>
+                <button type="submit" class="w-full bg-blue-600 text-white p-4 rounded-full font-bold shadow-lg">Sign In</button>
             </form>
-            <p class="text-center mt-8 text-sm font-bold">Don't have an account? <button onclick="toggleAuth('reg')" class="text-blue-700 hover:underline">Create Account</button></p>
+            <p class="text-center mt-6 text-sm font-bold text-slate-400">No account? <button onclick="toggleAuth('reg')" class="text-blue-700 underline">Create One</button></p>
         </div>
 
         <div id="reg-view" class="hidden">
             <form onsubmit="event.preventDefault(); showVerify();" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="lg:col-span-1"><label>Full Name</label><input type="text" placeholder="John Doe" class="custom-input" required></div>
-                <div class="lg:col-span-1"><label>Nickname</label><input type="text" placeholder="johny22" class="custom-input" required></div>
-                <div class="lg:col-span-1"><label>Univ Email</label><input type="email" placeholder="student@edu.ng" class="custom-input" required></div>
-                <div><label>Phone</label><input type="tel" id="phone" class="custom-input" required></div>
-                <div><label>University</label><input type="text" class="custom-input" required></div>
-                <div><label>Country</label><select id="country" class="custom-input"><option>Loading...</option></select></div>
+                <div class="md:col-span-3">
+                    <label class="text-[10px] font-black text-slate-400 uppercase ml-2">Full Name</label>
+                    <input type="text" placeholder="Roland Emereje" class="custom-input" required>
+                </div>
+                <input type="email" placeholder="Email" class="custom-input" required>
+                <input type="tel" id="phone" class="custom-input" required>
+                <select class="custom-input"><option>UniPort</option><option>UNILAG</option></select>
                 
                 <div class="md:col-span-3">
-                    <label>Set Strong Password</label>
-                    <input type="password" oninput="validatePassword(this.value)" class="custom-input" required>
-                    <div class="flex flex-wrap gap-4 mt-3 px-2">
-                        <span id="req-upper" class="requirement"><i class="fas fa-circle-check"></i> Uppercase</span>
-                        <span id="req-lower" class="requirement"><i class="fas fa-circle-check"></i> Lowercase</span>
-                        <span id="req-special" class="requirement"><i class="fas fa-circle-check"></i> Special</span>
-                        <span id="req-length" class="requirement"><i class="fas fa-circle-check"></i> 8+ Characters</span>
+                    <input type="password" id="regPass" oninput="validatePassword(this.value)" placeholder="Secure Password" class="custom-input" required>
+                    <div class="flex flex-wrap gap-3 mt-2 px-2">
+                        <span id="req-upper" class="requirement"><i class="fas fa-circle"></i> Upper</span>
+                        <span id="req-lower" class="requirement"><i class="fas fa-circle"></i> Lower</span>
+                        <span id="req-special" class="requirement"><i class="fas fa-circle"></i> Special</span>
+                        <span id="req-length" class="requirement"><i class="fas fa-circle"></i> 8+ Chars</span>
                     </div>
                 </div>
-
-                <div class="md:col-span-3 flex items-center gap-2 px-2">
-                    <input type="checkbox" id="t-agree" required class="w-4 h-4">
-                    <label for="t-agree" class="normal-case m-0 text-slate-500">I accept the <button type="button" onclick="toggleTerms(true)" class="text-blue-700 font-bold underline">Terms & Conditions</button></label>
+                
+                <div class="md:col-span-3 flex items-center gap-2">
+                    <input type="checkbox" required>
+                    <span class="text-xs">I agree to <button type="button" onclick="openModal('terms-modal')" class="text-blue-600 font-bold underline">Terms & Conditions</button></span>
                 </div>
-                <button type="submit" id="regBtn" class="md:col-span-3 bg-blue-700 text-white p-5 rounded-3xl font-black text-xl opacity-50 cursor-not-allowed" disabled>Create Account</button>
+                <button type="submit" id="regBtn" disabled class="md:col-span-3 bg-blue-700 text-white p-5 rounded-3xl font-black opacity-50 cursor-not-allowed">Create Account</button>
             </form>
-            <p class="text-center mt-6 text-sm font-bold">Already a member? <button onclick="toggleAuth('login')" class="text-blue-700 hover:underline">Sign In</button></p>
+            <p class="text-center mt-6 text-sm font-bold text-slate-400">Already a member? <button onclick="toggleAuth('login')" class="text-blue-700 underline">Sign In</button></p>
         </div>
     </div>
 
-    <div id="verify-screen" class="hidden fixed inset-0 bg-white z-[90] flex flex-col items-center justify-center p-6">
-        <h2 class="text-2xl font-black mb-2">Check your email</h2>
-        <p class="text-slate-400 mb-8 text-center max-w-xs">We sent a 6-digit code to verify your student status.</p>
-        <div class="flex gap-2 mb-8" id="otp-group">
-            <input type="text" maxlength="1" class="otp-input border-2 outline-none focus:border-blue-500">
-            <input type="text" maxlength="1" class="otp-input border-2 outline-none focus:border-blue-500">
-            <input type="text" maxlength="1" class="otp-input border-2 outline-none focus:border-blue-500">
-            <input type="text" maxlength="1" class="otp-input border-2 outline-none focus:border-blue-500">
-            <input type="text" maxlength="1" class="otp-input border-2 outline-none focus:border-blue-500">
-            <input type="text" maxlength="1" class="otp-input border-2 outline-none focus:border-blue-500">
+    <div id="verify-screen" class="hidden fixed inset-0 bg-white z-[150] flex flex-col items-center justify-center p-6">
+        <h2 class="text-3xl font-black mb-4">Check your Email</h2>
+        <p class="text-slate-400 mb-8">Enter the 6-digit code sent to your account.</p>
+        <div class="flex gap-2 mb-8">
+            <input type="text" maxlength="1" class="otp-input w-12 h-16 border-2 rounded-xl text-center text-2xl font-bold">
+            <input type="text" maxlength="1" class="otp-input w-12 h-16 border-2 rounded-xl text-center text-2xl font-bold">
+            <input type="text" maxlength="1" class="otp-input w-12 h-16 border-2 rounded-xl text-center text-2xl font-bold">
+            <input type="text" maxlength="1" class="otp-input w-12 h-16 border-2 rounded-xl text-center text-2xl font-bold">
+            <input type="text" maxlength="1" class="otp-input w-12 h-16 border-2 rounded-xl text-center text-2xl font-bold">
+            <input type="text" maxlength="1" class="otp-input w-12 h-16 border-2 rounded-xl text-center text-2xl font-bold">
         </div>
-        <button onclick="showDashboard()" class="bg-blue-600 text-white px-12 py-4 rounded-full font-bold shadow-lg">Verify Account</button>
+        <button onclick="showDashboard()" class="bg-blue-600 text-white px-12 py-4 rounded-full font-bold">Verify Account</button>
     </div>
 
-    <div id="dashboard" class="hidden fixed inset-0 bg-slate-50 flex h-screen w-full z-[100]">
-        
-        <aside id="sidebar" class="fixed md:relative w-72 bg-white h-full border-r border-slate-100 flex flex-col p-6 sidebar-closed md:sidebar-open">
-            <div class="flex items-center justify-between mb-10">
-                <h1 class="text-2xl font-black text-blue-700">GigPort.</h1>
-                <button onclick="toggleSidebar()" class="md:hidden"><i class="fas fa-times text-slate-400"></i></button>
+    <div id="dashboard" class="hidden fixed inset-0 flex bg-slate-50 z-50">
+        <aside id="sidebar" class="fixed md:relative w-72 bg-white h-full border-r flex flex-col p-6 -translate-x-full md:translate-x-0">
+            <div class="flex items-center justify-between mb-8">
+                <span class="text-2xl font-black text-blue-700">GigPort.</span>
+                <button onclick="toggleSidebar()" class="md:hidden"><i class="fas fa-times"></i></button>
             </div>
-            
-            <nav class="space-y-1 flex-1">
-                <div onclick="switchDashView('board')" class="sidebar-link active" id="nav-board"><i class="fas fa-briefcase"></i> Job Board</div>
-                <div onclick="switchDashView('post')" class="sidebar-link" id="nav-post"><i class="fas fa-plus-circle"></i> Post a Gig</div>
-                <div onclick="switchDashView('manage')" class="sidebar-link" id="nav-manage"><i class="fas fa-tasks"></i> Manage Listings</div>
-                <div onclick="switchDashView('profile')" class="sidebar-link" id="nav-profile"><i class="fas fa-user-circle"></i> My Profile</div>
+            <nav class="flex-1 space-y-1">
+                <div onclick="showTab('feed')" class="sidebar-link active"><i class="fas fa-briefcase"></i> Job Board</div>
+                <div onclick="showTab('manage')" class="sidebar-link"><i class="fas fa-list-check"></i> Manage Gigs</div>
+                <div onclick="showTab('profile')" class="sidebar-link"><i class="fas fa-user"></i> My Profile</div>
+                <div onclick="showTab('settings')" class="sidebar-link"><i class="fas fa-cog"></i> Settings</div>
             </nav>
-
-            <div class="pt-6 border-t border-slate-100 space-y-2">
-                <div onclick="toggleChat()" class="sidebar-link text-blue-600 bg-blue-50"><i class="fas fa-headset"></i> Support</div>
-                <div onclick="location.reload()" class="sidebar-link text-red-500 hover:bg-red-50"><i class="fas fa-sign-out-alt"></i> Sign Out</div>
+            <div class="pt-6 border-t space-y-3">
+                <button onclick="openModal('chat-modal')" class="sidebar-link w-full text-blue-600 bg-blue-50"><i class="fas fa-headset"></i> Support</button>
+                <button onclick="location.reload()" class="sidebar-link w-full text-red-500"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </aside>
 
         <main class="flex-1 flex flex-col overflow-hidden">
-            <header class="bg-white border-b border-slate-100 p-4 flex items-center justify-between px-6">
-                <button onclick="toggleSidebar()" class="md:hidden text-slate-600"><i class="fas fa-bars text-xl"></i></button>
-                <div class="flex items-center bg-slate-50 px-4 py-2 rounded-xl border border-slate-100 w-full max-w-md mx-4">
+            <header class="bg-white border-b p-4 flex items-center justify-between px-6">
+                <button onclick="toggleSidebar()" class="md:hidden p-2"><i class="fas fa-bars"></i></button>
+                <div class="bg-slate-100 px-4 py-2 rounded-xl flex items-center w-full max-w-md ml-4">
                     <i class="fas fa-search text-slate-400 mr-2"></i>
-                    <input type="text" placeholder="Search for jobs (e.g. Design, Essay)..." class="bg-transparent outline-none text-sm w-full">
+                    <input type="text" placeholder="Search gigs..." class="bg-transparent outline-none w-full text-sm">
                 </div>
-                <div class="flex items-center gap-4">
-                    <div class="relative cursor-pointer" onclick="switchDashView('manage')">
-                        <i class="fas fa-bell text-slate-400 text-lg"></i>
-                        <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">1</span>
-                    </div>
-                    <img src="https://ui-avatars.com/api/?name=User&background=1d4ed8&color=fff" class="w-9 h-9 rounded-full border-2 border-white shadow-sm">
+                <div class="flex items-center gap-4 ml-4">
+                    <i class="fas fa-bell text-slate-400 relative"><span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span></i>
+                    <img src="https://ui-avatars.com/api/?name=User" class="w-10 h-10 rounded-full border">
                 </div>
             </header>
 
-            <div class="flex-1 overflow-y-auto p-6 md:p-8 custom-scroll">
-                
-                <div id="view-board">
-                    <h2 class="text-2xl font-black text-slate-800 mb-6">Available Gigs</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:border-blue-200 transition-all">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-bold text-lg">Website Landing Page (HTML/Tailwind)</h3>
-                                <span class="bg-green-100 text-green-700 font-black px-3 py-1 rounded-lg">₦15,000</span>
+            <div id="content-area" class="p-6 md:p-10 overflow-y-auto">
+                <div id="tab-feed" class="tab-content">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-2xl font-black">Available Gigs</h2>
+                        <button onclick="openModal('post-modal')" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold">+ Post Gig</button>
+                    </div>
+                    <div class="grid gap-4">
+                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-lg">Website Design using Tailwind</h3>
+                                <p class="text-sm text-slate-400">Location: Remote | Budget: ₦25,000</p>
                             </div>
-                            <p class="text-sm text-slate-500 mt-2">Need a clean landing page for my final year project. Must be responsive.</p>
-                            <div class="mt-6 flex justify-between items-center">
-                                <span class="text-xs text-slate-400"><i class="fas fa-university mr-1"></i> UniPort</span>
-                                <button onclick="openApplyModal('Website Landing Page')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Apply Now</button>
+                            <button onclick="openModal('apply-modal')" class="bg-slate-900 text-white px-5 py-2 rounded-xl font-bold text-sm">Apply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-manage" class="tab-content hidden">
+                    <h2 class="text-2xl font-black mb-6">Manage Your Postings</h2>
+                    <div class="bg-white rounded-3xl p-6 border border-blue-100">
+                        <div class="flex justify-between items-center">
+                            <span class="text-blue-600 font-bold uppercase text-xs">Active Posting</span>
+                            <span class="bg-red-500 text-white text-[10px] px-2 py-1 rounded-full">2 Applicants</span>
+                        </div>
+                        <h3 class="font-bold mt-2">Data Analysis with Excel</h3>
+                        <div class="mt-4 border-t pt-4 space-y-3">
+                            <div class="flex justify-between items-center text-sm">
+                                <span>Chinedu Obi (UniPort)</span>
+                                <button onclick="alert('Applicant Approved! Notification sent.')" class="text-green-600 font-bold">Approve ✅</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="view-post" class="hidden max-w-2xl mx-auto">
-                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-                        <h2 class="text-2xl font-black mb-6">Create a Gig</h2>
-                        <div class="space-y-4">
-                            <div><label>Gig Title</label><input type="text" placeholder="e.g. Help with Mathematics Assignment" class="custom-input"></div>
-                            <div><label>Budget (₦)</label><input type="number" placeholder="5000" class="custom-input"></div>
-                            <div><label>Description</label><textarea rows="4" placeholder="Detail exactly what you need..." class="custom-input rounded-3xl"></textarea></div>
-                            <button onclick="alert('Gig Posted Successfully!')" class="w-full bg-blue-700 text-white p-4 rounded-full font-bold">Post Gig to Board</button>
+                <div id="tab-profile" class="tab-content hidden">
+                    <h2 class="text-2xl font-black mb-6">Professional Profile</h2>
+                    <div class="bg-white p-8 rounded-[3rem] shadow-sm max-w-2xl">
+                        <div class="flex flex-col items-center mb-8">
+                            <div class="relative">
+                                <img src="https://ui-avatars.com/api/?name=Roland+Emereje&size=128" class="w-32 h-32 rounded-full border-4 border-blue-50">
+                                <button class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full"><i class="fas fa-camera"></i></button>
+                            </div>
                         </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label>Full Name</label><input type="text" value="Roland Emereje" class="custom-input"></div>
+                            <div><label>Phone Number</label><input type="text" value="+2348054476702" class="custom-input"></div>
+                            <div><label>State</label><input type="text" placeholder="Rivers" class="custom-input"></div>
+                            <div><label>Faculty</label><input type="text" placeholder="Engineering" class="custom-input"></div>
+                        </div>
+                        <button class="w-full mt-8 bg-blue-600 text-white p-4 rounded-2xl font-bold">Save Changes</button>
                     </div>
                 </div>
 
-                <div id="view-manage" class="hidden">
-                    <h2 class="text-2xl font-black mb-6">Manage Listings</h2>
-                    <div class="space-y-6">
-                        <div class="bg-white p-6 rounded-3xl border border-slate-100">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="font-black text-slate-700">Applicants for: Website Landing Page</h3>
-                                <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-md">Active</span>
-                            </div>
-                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                <div class="flex items-center gap-3">
-                                    <img src="https://ui-avatars.com/api/?name=Applicant&background=6366f1&color=fff" class="w-10 h-10 rounded-full">
-                                    <div>
-                                        <p class="font-bold text-sm">Chidi Benson</p>
-                                        <p class="text-[10px] text-slate-400">Computer Science • 300L</p>
-                                    </div>
-                                </div>
-                                <button onclick="approveApplicant(this)" class="bg-green-600 text-white px-4 py-2 rounded-xl text-[10px] font-bold">Approve Application</button>
+                <div id="tab-settings" class="tab-content hidden">
+                    <h2 class="text-2xl font-black mb-6">Settings</h2>
+                    <div class="bg-white p-8 rounded-3xl space-y-6">
+                        <div>
+                            <label class="mb-4">Display Theme</label>
+                            <div class="flex gap-4">
+                                <button onclick="setTheme('light')" class="flex-1 p-4 border rounded-2xl font-bold"><i class="fas fa-sun mr-2"></i> Light</button>
+                                <button onclick="setTheme('dark')" class="flex-1 p-4 border rounded-2xl font-bold"><i class="fas fa-moon mr-2"></i> Dark</button>
+                                <button onclick="setTheme('auto')" class="flex-1 p-4 border rounded-2xl font-bold"><i class="fas fa-desktop mr-2"></i> Default</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </main>
     </div>
 
-    <div id="apply-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-[2.5rem] p-8 shadow-2xl">
-            <h2 class="text-xl font-black mb-2">Apply for: <span id="gig-title-display" class="text-blue-600"></span></h2>
-            <div class="space-y-4 mt-6">
-                <div><label>Your Qualifications</label><textarea placeholder="Explain why you are fit for this gig..." class="custom-input rounded-2xl"></textarea></div>
-                <div><label>Educational Background</label><input type="text" placeholder="e.g. BSc Computer Science, 3rd Year" class="custom-input"></div>
-                <div>
-                    <label>Passport Image (JPG/PNG)</label>
-                    <div class="border-2 border-dashed border-slate-200 p-4 rounded-2xl text-center">
-                        <i class="fas fa-cloud-upload-alt text-slate-300 text-2xl mb-2"></i>
-                        <input type="file" class="text-[10px]">
-                    </div>
-                </div>
-                <div class="flex gap-3 pt-4">
-                    <button onclick="toggleApplyModal(false)" class="flex-1 bg-slate-100 p-4 rounded-2xl font-bold">Cancel</button>
-                    <button onclick="toggleApplyModal(false); alert('Application Sent!')" class="flex-1 bg-blue-600 text-white p-4 rounded-2xl font-bold">Submit Application</button>
-                </div>
+    <div id="post-modal" class="hidden fixed inset-0 modal-overlay z-[200] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-[2.5rem] p-8">
+            <h2 class="text-2xl font-black mb-4">Post a New Gig</h2>
+            <div class="space-y-4">
+                <input type="text" placeholder="Title (e.g. Logo Design)" class="custom-input">
+                <input type="text" placeholder="Amount (₦)" class="custom-input">
+                <input type="text" placeholder="Location (e.g. UniPort Choba)" class="custom-input">
+                <textarea placeholder="Gig Description..." class="custom-input h-32"></textarea>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeModal('post-modal')" class="flex-1 p-4 font-bold text-slate-400">Cancel</button>
+                <button onclick="closeModal('post-modal')" class="flex-1 bg-blue-600 text-white rounded-2xl font-bold">Post Now</button>
             </div>
         </div>
     </div>
 
-    <div id="terms-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-xl rounded-[2.5rem] p-8 shadow-2xl">
-            <h2 class="text-2xl font-black text-slate-800 mb-4">Terms of Service</h2>
-            <div class="h-80 overflow-y-auto pr-4 text-sm text-slate-600 leading-relaxed custom-scroll">
-                <p class="mb-4 font-bold text-blue-700">Contact: +2348054476702 (WhatsApp) | remereje255@uniport.edu.ng</p>
-                <p class="mb-2"><strong>1. Accountability:</strong> Students must provide accurate educational data.</p>
-                <p class="mb-2"><strong>2. Safety:</strong> All physical meetings between students must occur in campus public spaces.</p>
-                <p class="mb-2"><strong>3. Payments:</strong> GigPort provides the connection; ensure payment terms are agreed before starting work.</p>
+    <div id="apply-modal" class="hidden fixed inset-0 modal-overlay z-[200] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-xl rounded-[2.5rem] p-8 max-h-[90vh] overflow-y-auto">
+            <h2 class="text-2xl font-black mb-4">Apply for Gig</h2>
+            <div class="space-y-4">
+                <textarea placeholder="Your Qualifications & Experience..." class="custom-input h-24"></textarea>
+                <input type="text" placeholder="Faculty / Department" class="custom-input">
+                <input type="text" placeholder="WhatsApp Contact" class="custom-input">
+                <div>
+                    <label>Upload School ID Image</label>
+                    <input type="file" class="mt-2 text-sm text-slate-500">
+                </div>
             </div>
-            <button onclick="toggleTerms(false)" class="w-full mt-6 bg-slate-900 text-white p-4 rounded-2xl font-bold">I Accept</button>
+            <button onclick="closeModal('apply-modal')" class="w-full mt-6 bg-blue-600 text-white p-4 rounded-2xl font-bold">Submit Application</button>
+        </div>
+    </div>
+
+    <div id="terms-modal" class="hidden fixed inset-0 modal-overlay z-[200] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-[2.5rem] p-8">
+            <h2 class="text-2xl font-black mb-4">Terms & Conditions</h2>
+            <div class="h-64 overflow-y-auto text-sm text-slate-500 pr-2">
+                <p class="mb-4"><strong>WhatsApp: +2348054476702</strong><br><strong>Email: remereje255@uniport.edu.ng</strong></p>
+                <p>1. GigPort is for verified students only. 2. Payments are escrow-protected. 3. Fraud leads to permanent ban.</p>
+            </div>
+            <button onclick="closeModal('terms-modal')" class="w-full mt-6 bg-slate-900 text-white p-4 rounded-2xl font-bold">Close</button>
+        </div>
+    </div>
+
+    <div id="chat-modal" class="hidden fixed inset-0 modal-overlay z-[200] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-8 text-center">
+            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600 text-2xl"><i class="fas fa-headset"></i></div>
+            <h2 class="text-xl font-black mb-2">Customer Care</h2>
+            <p class="text-sm text-slate-400 mb-6">We are here to help you 24/7.</p>
+            <div class="space-y-3">
+                <a href="https://wa.me/2348054476702" target="_blank" class="block w-full p-4 bg-green-50 text-green-700 rounded-2xl font-bold"><i class="fab fa-whatsapp mr-2"></i> WhatsApp App</a>
+                <a href="mailto:remereje255@uniport.edu.ng" class="block w-full p-4 bg-blue-50 text-blue-700 rounded-2xl font-bold"><i class="fas fa-envelope mr-2"></i> Gmail App</a>
+            </div>
+            <button onclick="closeModal('chat-modal')" class="mt-6 text-slate-400 font-bold">Dismiss</button>
         </div>
     </div>
 
     <script>
-        // AUTH LOGIC
-        function toggleAuth(view) {
-            document.getElementById('login-view').classList.toggle('hidden', view === 'reg');
-            document.getElementById('reg-view').classList.toggle('hidden', view === 'login');
+        // --- System Logic ---
+        function toggleAuth(v) {
+            document.getElementById('login-view').classList.toggle('hidden', v === 'reg');
+            document.getElementById('reg-view').classList.toggle('hidden', v === 'login');
         }
 
-        function validatePassword(val) {
-            const r = { upper: /[A-Z]/.test(val), lower: /[a-z]/.test(val), special: /[!@#$%^&*(),.?":{}|<>]/.test(val), length: val.length >= 8 };
-            Object.keys(r).forEach(k => document.getElementById(`req-${k}`).className = r[k] ? 'requirement met' : 'requirement');
+        function validatePassword(v) {
+            const r = { upper: /[A-Z]/.test(v), lower: /[a-z]/.test(v), special: /[!@#$%^&*(),.?":{}|<>]/.test(v), length: v.length >= 8 };
+            Object.keys(r).forEach(k => document.getElementById(`req-${k}`).classList.toggle('met', r[k]));
             const btn = document.getElementById('regBtn');
             const valid = Object.values(r).every(Boolean);
-            btn.disabled = !valid; btn.style.opacity = valid ? '1' : '0.5'; btn.style.cursor = valid ? 'pointer' : 'not-allowed';
+            btn.disabled = !valid; btn.style.opacity = valid ? 1 : 0.5; btn.style.cursor = valid ? 'pointer' : 'not-allowed';
         }
 
         function showVerify() {
             document.getElementById('auth-container').classList.add('hidden');
             document.getElementById('verify-screen').classList.remove('hidden');
-            document.body.classList.remove('items-center', 'justify-center');
         }
 
         function showDashboard() {
             document.getElementById('auth-container').classList.add('hidden');
             document.getElementById('verify-screen').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
+            document.body.classList.remove('items-center', 'justify-center');
         }
 
-        // DASHBOARD NAVIGATION
-        function switchDashView(view) {
-            ['board', 'post', 'manage', 'profile'].forEach(v => {
-                const el = document.getElementById(`view-${v}`);
-                if (el) el.classList.toggle('hidden', v !== view);
-                const nav = document.getElementById(`nav-${v}`);
-                if (nav) nav.classList.toggle('active', v === view);
-            });
+        // --- Dashboard Logic ---
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            event.currentTarget.classList.add('active');
             if(window.innerWidth < 768) toggleSidebar();
         }
 
-        function toggleSidebar() {
-            const sb = document.getElementById('sidebar');
-            sb.classList.toggle('sidebar-closed');
-            sb.classList.toggle('sidebar-open');
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function setTheme(m) {
+            const b = document.body;
+            if(m === 'dark') b.classList.add('dark');
+            else if(m === 'light') b.classList.remove('dark');
+            else if(window.matchMedia('(prefers-color-scheme: dark)').matches) b.classList.add('dark');
         }
 
-        function openApplyModal(title) {
-            document.getElementById('gig-title-display').textContent = title;
-            document.getElementById('apply-modal').classList.remove('hidden');
-        }
-
-        function toggleApplyModal(show) { document.getElementById('apply-modal').classList.toggle('hidden', !show); }
-        function toggleTerms(show) { document.getElementById('terms-modal').classList.toggle('hidden', !show); }
-        function toggleChat() { alert('Support Hotline: +2348054476702\nEmail: remereje255@uniport.edu.ng'); }
-        
-        function approveApplicant(btn) {
-            btn.textContent = "Application Approved ✓";
-            btn.className = "bg-slate-100 text-green-700 px-4 py-2 rounded-xl text-[10px] font-black";
-            alert('Applicant has been notified of your approval!');
-        }
-
-        // INIT
+        // --- Init ---
         window.onload = () => {
-            fetch('https://restcountries.com/v3.1/all?fields=name,cca2').then(r => r.json()).then(data => {
-                const sel = document.getElementById('country');
-                sel.innerHTML = '<option value="">Select Country</option>';
-                data.sort((a,b)=>a.name.common.localeCompare(b.name.common)).forEach(c => {
-                    let o = document.createElement('option'); o.value = c.cca2; o.textContent = c.name.common; sel.appendChild(o);
+            window.intlTelInput(document.querySelector("#phone"), { initialCountry: "ng" });
+            const otps = document.querySelectorAll('.otp-input');
+            otps.forEach((ipt, idx) => {
+                ipt.addEventListener('keyup', (e) => {
+                    if(e.key >= 0 && e.key <= 9 && idx < 5) otps[idx+1].focus();
+                    if(e.key === "Backspace" && idx > 0) otps[idx-1].focus();
                 });
             });
-            window.intlTelInput(document.querySelector("#phone"), { initialCountry: "ng" });
         };
     </script>
 </body>
