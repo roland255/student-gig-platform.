@@ -3,155 +3,389 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GigPort | UniPort Dashboard</title>
+    <title>GigPort | Student Marketplace</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: #f8fafc; overflow-x: hidden; }
-        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(56, 189, 248, 0.1); }
+        :root { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --border: #e2e8f0; --input-bg: #ffffff; --search-text: #1e293b; }
+        .dark-mode { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --border: #334155; --input-bg: #334155; --search-text: #ffffff; }
+        
+        body { background-color: var(--bg); color: var(--text); transition: all 0.3s ease; }
+        .glass-card { background: var(--card); border: 1px solid var(--border); }
+        .custom-input { background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 1.25rem; padding: 1rem; width: 100%; outline: none; color: var(--text); }
+        
+        .search-bar { background-color: var(--input-bg); border: 2px solid #3b82f650; color: var(--search-text); font-weight: 500; }
+        .search-bar::placeholder { color: #94a3b8; font-weight: 400; }
+
         .hidden { display: none !important; }
-        .sidebar-btn:hover { background: rgba(14, 165, 233, 0.1); color: #38bdf8; }
-        .active-view { background: rgba(14, 165, 233, 0.15); color: #38bdf8; border-right: 4px solid #38bdf8; }
-        input, textarea { background: #0f172a !important; border: 1px solid #1e293b !important; color: white !important; border-radius: 12px; padding: 12px; }
+        #sidebar { transition: transform 0.3s ease; z-index: 100; }
+        .sidebar-closed { transform: translateX(-100%); }
+        
+        .requirement { font-size: 10px; font-weight: 900; color: #cbd5e1; }
+        .requirement.met { color: #22c55e; }
+        .otp-input { width: 2.5rem; height: 3rem; text-align: center; font-weight: bold; border: 2px solid var(--border); border-radius: 10px; background: var(--card); color: var(--text); }
+        
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+        .nav-link:hover, .nav-link.active { background: #3b82f620; color: #3b82f6; }
     </style>
 </head>
-<body>
+<body class="font-sans min-h-screen">
 
-    <div id="section-slides" class="min-h-screen flex flex-col items-center justify-center p-10 text-center">
-        <h1 class="text-8xl font-black mb-4 tracking-tighter">Gig<span class="text-sky-500">Port</span></h1>
-        <div class="glass p-8 rounded-[30px] max-w-2xl text-left mt-6">
-            <p class="text-sky-400 font-bold text-sm uppercase mb-2">Aim</p>
-            <p class="text-xl mb-6">To connect students with income-generating gigs via a peer-to-peer marketplace.</p>
-            <p class="text-sky-400 font-bold text-sm uppercase mb-2">Objectives</p>
-            <ul class="text-slate-400 space-y-1 text-sm">
-                <li>• Post Gigs & Hire Peers</li>
-                <li>• Real-time Application Portal</li>
-                <li>• Integrated Listing Management</li>
-            </ul>
-        </div>
-        <div class="mt-10 flex gap-4">
-            <button onclick="showSection('section-auth')" class="bg-sky-600 px-8 py-4 rounded-2xl font-bold">Start Live Demo</button>
-            <button onclick="bypassLogin()" class="border border-slate-700 px-8 py-4 rounded-2xl font-bold text-slate-500">View Interfaces (Preview)</button>
-        </div>
-    </div>
-
-    <div id="section-auth" class="hidden min-h-screen flex items-center justify-center bg-[#010409]">
-        <div class="glass w-full max-w-md p-10 rounded-[40px] shadow-2xl">
-            <h2 id="auth-title" class="text-3xl font-bold text-center mb-10">Sign In</h2>
-            <form id="auth-form" class="space-y-4">
-                <div id="signup-fields" class="hidden grid grid-cols-2 gap-4">
-                    <input type="text" id="reg-name" placeholder="Full Name">
-                    <input type="text" id="reg-nick" placeholder="Nickname">
-                </div>
-                <input type="email" id="auth-email" placeholder="Email" class="w-full">
-                <input type="password" id="auth-pass" placeholder="Password" class="w-full">
-                <button type="submit" class="w-full bg-sky-600 py-4 rounded-2xl font-bold text-lg">Enter Portal</button>
-            </form>
-            <button onclick="toggleAuth()" id="toggle-btn" class="w-full mt-6 text-sm text-slate-500 underline">New? Create Account</button>
-        </div>
-    </div>
-
-    <div id="section-dashboard" class="hidden flex min-h-screen">
-        <aside class="w-72 glass border-r border-white/5 flex flex-col p-6">
-            <h2 class="text-2xl font-black mb-10">Gig<span class="text-sky-500">Port</span></h2>
-            <nav class="flex-1 space-y-2">
-                <button onclick="changeView('view-board')" id="nav-board" class="sidebar-btn active-view w-full text-left p-4 rounded-xl flex items-center gap-3 transition">
-                    <i class="fa-solid fa-layer-group"></i> Job Board
-                </button>
-                <button onclick="changeView('view-post')" id="nav-post" class="sidebar-btn w-full text-left p-4 rounded-xl flex items-center gap-3 transition">
-                    <i class="fa-solid fa-circle-plus"></i> Post a Gig
-                </button>
-                <button onclick="changeView('view-profile')" id="nav-profile" class="sidebar-btn w-full text-left p-4 rounded-xl flex items-center gap-3 transition">
-                    <i class="fa-solid fa-id-card"></i> Profile ID
-                </button>
-            </nav>
-            <button onclick="location.reload()" class="text-red-500 font-bold p-4 text-sm"><i class="fa-solid fa-power-off mr-2"></i> Log Out</button>
-        </aside>
-
-        <main class="flex-1 p-10 overflow-y-auto">
-            <header class="flex justify-between items-center mb-10">
-                <h1 id="view-title" class="text-4xl font-black tracking-tighter">Marketplace</h1>
-                <div class="glass px-4 py-2 rounded-full border-sky-500/20 text-sky-400 text-xs font-bold">@Student_User</div>
-            </header>
-
-            <div id="view-board" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                </div>
-
-            <div id="view-post" class="hidden max-w-xl mx-auto glass p-10 rounded-[35px] border-t-4 border-sky-500">
-                <h3 class="text-xl font-bold mb-6">Create New Listing</h3>
-                <form id="post-form" class="space-y-4">
-                    <input type="text" id="g-title" placeholder="Job Title" class="w-full">
-                    <input type="number" id="g-price" placeholder="Budget (₦)" class="w-full">
-                    <input type="text" id="g-loc" placeholder="Location (e.g. Abuja Campus)" class="w-full">
-                    <textarea id="g-desc" placeholder="Details..." class="w-full h-32"></textarea>
-                    <button class="w-full bg-sky-600 py-4 rounded-2xl font-bold">Publish to Board</button>
-                </form>
+    <div id="auth-container" class="flex items-center justify-center min-h-screen p-4">
+        <div class="w-full max-w-4xl glass-card rounded-[3rem] shadow-2xl p-8 md:p-12">
+            <div class="text-center mb-6">
+                <h1 class="text-4xl font-black text-blue-600">GigPort.</h1>
+                <p class="text-slate-400 font-bold text-sm">Professional Student Marketplace</p>
             </div>
 
-            <div id="view-profile" class="hidden max-w-md mx-auto glass p-10 rounded-[40px] text-center border-b-4 border-sky-500">
-                <div class="w-32 h-32 bg-slate-900 rounded-full border-4 border-sky-500 mx-auto mb-6 flex items-center justify-center">
-                    <i class="fa-solid fa-user-graduate text-5xl"></i>
+            <div id="login-view">
+                <form id="loginForm" class="max-w-md mx-auto space-y-4">
+                    <input type="email" id="loginEmail" placeholder="Uni Email" class="custom-input" required>
+                    <div class="relative">
+                        <input type="password" id="loginPass" placeholder="Password" class="custom-input" required>
+                        <button type="button" onclick="togglePass('loginPass')" class="absolute right-4 top-4 text-slate-400"><i class="fas fa-eye"></i></button>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white p-4 rounded-full font-bold shadow-lg">Sign In</button>
+                </form>
+                <p class="text-center mt-8 text-sm font-bold">New? <button onclick="toggleAuth('reg')" class="text-blue-600 underline">Create Account</button></p>
+            </div>
+
+            <div id="reg-view" class="hidden">
+                <form id="regForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <input type="text" id="r-fullname" placeholder="Full Name" class="custom-input" required>
+                    <input type="text" id="r-nick" placeholder="Nickname" class="custom-input" required>
+                    <input type="email" id="r-email" placeholder="Uni Email" class="custom-input" required>
+                    <input type="tel" id="phone" class="custom-input" required>
+                    <input type="text" id="r-uni" placeholder="University" class="custom-input" required>
+                    <input type="text" id="r-state" placeholder="State" class="custom-input" required>
+                    
+                    <div class="md:col-span-3">
+                        <div class="relative">
+                            <input type="password" id="regPass" oninput="validatePass(this.value)" placeholder="Strong Password" class="custom-input" required>
+                            <button type="button" onclick="togglePass('regPass')" class="absolute right-4 top-4 text-slate-400"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <div class="flex gap-3 mt-2 px-2">
+                            <span id="up" class="requirement">ABC</span>
+                            <span id="low" class="requirement">abc</span>
+                            <span id="spec" class="requirement">#@!</span>
+                            <span id="len" class="requirement">8+</span>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-3 flex items-start gap-3 px-2">
+                        <input type="checkbox" id="termsCheck" required class="mt-1 w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <label for="termsCheck" class="text-xs text-slate-500 leading-tight">
+                            I agree to the <button type="button" onclick="toggleModal('terms', true)" class="text-blue-600 font-bold underline">Terms & Conditions</button> and confirm I am a verified student.
+                        </label>
+                    </div>
+
+                    <button type="submit" id="regBtn" class="md:col-span-3 w-full bg-blue-700 text-white p-4 rounded-3xl font-black opacity-50 transition-all" disabled>Create Account</button>
+                </form>
+                <p class="text-center mt-6 text-sm font-bold">Have an account? <button onclick="toggleAuth('login')" class="text-blue-600 underline">Sign In</button></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="verify-screen" class="hidden fixed inset-0 bg-white dark:bg-slate-900 z-[200] flex flex-col items-center justify-center p-6 text-center">
+        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+            <i class="fas fa-paper-plane text-blue-600 text-2xl"></i>
+        </div>
+        <h2 class="text-3xl font-black mb-2">Verification Sent</h2>
+        <p class="text-slate-400 mb-8 max-w-xs">Please check your email and click the confirmation link to activate your account, then return here to login.</p>
+        <button onclick="location.reload()" class="bg-blue-600 text-white px-10 py-3 rounded-full font-bold mb-4 shadow-lg">Back to Login</button>
+    </div>
+
+    <div id="dashboard" class="hidden fixed inset-0 flex overflow-hidden">
+        <aside id="sidebar" class="fixed md:relative w-72 h-full glass-card border-r p-6 sidebar-closed md:sidebar-open">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-black text-blue-600">GigPort.</h2>
+                <button onclick="toggleSidebar()" class="md:hidden"><i class="fas fa-times"></i></button>
+            </div>
+            <nav class="space-y-2 flex-1">
+                <div onclick="showPage('job-board')" class="nav-link active"><i class="fas fa-th-large"></i> Job Board</div>
+                <div onclick="showPage('post-gig')" class="nav-link"><i class="fas fa-plus-circle"></i> Post a Gig</div>
+                <div onclick="showPage('manage')" class="nav-link"><i class="fas fa-list-ul"></i> Manage Gigs</div>
+                <div onclick="showPage('profile')" class="nav-link"><i class="fas fa-user-edit"></i> My Profile</div>
+                <div onclick="showPage('settings')" class="nav-link"><i class="fas fa-adjust"></i> Appearance</div>
+            </nav>
+            <div class="pt-6 border-t space-y-2">
+                <div onclick="toggleModal('support', true)" class="nav-link text-blue-600 font-bold"><i class="fas fa-headset"></i> Support</div>
+                <div onclick="signOut()" class="nav-link text-red-500 font-bold"><i class="fas fa-power-off"></i> Logout</div>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-full overflow-hidden">
+            <header class="p-4 glass-card border-b flex justify-between items-center px-6">
+                <button onclick="toggleSidebar()" class="md:hidden p-2"><i class="fas fa-bars text-xl"></i></button>
+                
+                <div class="relative w-full max-w-md mx-4">
+                    <i class="fas fa-search absolute left-4 top-3.5 text-blue-500"></i>
+                    <input type="text" id="gigSearch" onkeyup="searchGigs()" 
+                           placeholder="Search available student gigs..." 
+                           class="w-full pl-12 pr-4 py-3 rounded-2xl search-bar outline-none text-sm shadow-sm">
                 </div>
-                <h2 class="text-2xl font-bold">Roland Emereje</h2>
-                <p class="text-sky-400 font-bold mb-6">@GigPort_Student</p>
-                <div class="text-left space-y-4 bg-slate-950/50 p-6 rounded-2xl text-sm">
-                    <p><span class="text-slate-500 block">University</span> UniPort</p>
-                    <p><span class="text-slate-500 block">Department</span> Computer Science</p>
-                    <p><span class="text-slate-500 block">Status</span> 400-Level Finalist</p>
+
+                <div class="flex items-center gap-4">
+                    <div class="relative cursor-pointer">
+                        <i class="fas fa-bell text-slate-400 text-xl"></i>
+                    </div>
+                    <img id="header-avatar" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" class="w-10 h-10 rounded-full border-2 border-white shadow-sm">
                 </div>
+            </header>
+
+            <div id="content-pages" class="flex-1 overflow-y-auto p-6 md:p-10">
+                <section id="page-job-board">
+                    <div class="flex justify-between items-end mb-8">
+                        <div>
+                            <h2 class="text-3xl font-black">Job Board</h2>
+                            <p class="text-slate-400 text-sm">Find gigs posted by fellow students.</p>
+                        </div>
+                    </div>
+                    <div id="gig-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
+                </section>
+
+                <section id="page-post-gig" class="hidden max-w-2xl mx-auto">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-black">Hire a Student</h2>
+                        <p class="text-slate-400">Describe what you need help with.</p>
+                    </div>
+                    <form id="postForm" class="space-y-4 glass-card p-8 rounded-[2.5rem]">
+                        <div><label class="text-xs font-black ml-2">GIG TITLE</label><input type="text" id="p-title" placeholder="e.g., Physics Assignment Tutoring" class="custom-input" required></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="text-xs font-black ml-2">BUDGET (₦)</label><input type="number" id="p-price" placeholder="5000" class="custom-input" required></div>
+                            <div><label class="text-xs font-black ml-2">LOCATION</label><input type="text" id="p-loc" placeholder="UniPort / Online" class="custom-input" required></div>
+                        </div>
+                        <div><label class="text-xs font-black ml-2">GIG DESCRIPTION</label><textarea id="p-desc" placeholder="Details about the task..." class="custom-input h-32" required></textarea></div>
+                        <button type="submit" class="w-full bg-blue-600 text-white p-5 rounded-2xl font-black text-lg shadow-xl shadow-blue-200">Post Gig Now</button>
+                    </form>
+                </section>
+
+                <section id="page-manage" class="hidden">
+                    <h2 class="text-3xl font-black mb-8">Manage Listings</h2>
+                    <div class="glass-card rounded-[2.5rem] overflow-hidden">
+                        <div class="p-6 border-b bg-slate-50 dark:bg-slate-800"><h3 class="font-bold">My Active Gigs</h3></div>
+                        <div id="my-gigs-list" class="p-8 space-y-4"></div>
+                    </div>
+                </section>
+
+                <section id="page-profile" class="hidden max-w-2xl mx-auto">
+                    <h2 class="text-3xl font-black mb-8 text-center">Professional Profile</h2>
+                    <div class="glass-card p-10 rounded-[3rem] space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="prof-name" placeholder="Full Name" class="custom-input">
+                            <input type="text" id="prof-uni" placeholder="School Name" class="custom-input">
+                        </div>
+                        <p class="text-center text-xs text-slate-400">Profile updates are connected to your Supabase Identity.</p>
+                    </div>
+                </section>
+
+                <section id="page-settings" class="hidden max-w-md mx-auto">
+                    <h2 class="text-3xl font-black mb-8 text-center">Appearance</h2>
+                    <div class="glass-card p-8 rounded-[2.5rem] space-y-4">
+                        <button onclick="setTheme('light')" class="w-full flex justify-between items-center p-4 border rounded-2xl hover:bg-slate-50 transition-all font-bold">Light Mode <i class="fas fa-sun text-orange-400"></i></button>
+                        <button onclick="setTheme('dark')" class="w-full flex justify-between items-center p-4 border rounded-2xl hover:bg-slate-50 transition-all font-bold">Dark Mode <i class="fas fa-moon text-blue-400"></i></button>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
 
+    <div id="apply-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-[2.5rem] p-8 relative shadow-2xl">
+            <button onclick="toggleModal('apply', false)" class="absolute top-6 right-6 text-2xl hover:text-red-500">&times;</button>
+            <h2 class="text-2xl font-black mb-6">Gig Application</h2>
+            <form id="applyForm" class="space-y-4">
+                <input type="hidden" id="apply-gig-id">
+                <textarea id="a-qual" placeholder="Tell us about your qualifications..." class="custom-input h-28" required></textarea>
+                <input type="tel" id="a-phone" placeholder="WhatsApp Number" class="custom-input" required>
+                <button type="submit" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black">Submit to Poster</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="support-modal" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-xs rounded-[2.5rem] p-8 text-center shadow-2xl">
+            <h3 class="font-black text-xl mb-6">Contact Us</h3>
+            <div class="space-y-4">
+                <a href="https://wa.me/2348054476702" target="_blank" class="flex items-center justify-center gap-3 bg-green-500 text-white p-4 rounded-2xl font-bold">WhatsApp</a>
+                <a href="mailto:remereje255@uniport.edu.ng" class="flex items-center justify-center gap-3 bg-blue-500 text-white p-4 rounded-2xl font-bold">Email</a>
+            </div>
+            <button onclick="toggleModal('support', false)" class="mt-8 text-sm font-black text-slate-400">Close</button>
+        </div>
+    </div>
+
     <script>
+        // SUPABASE INIT
         const SB_URL = 'https://ybfamugobqgkdbezkgyw.supabase.co';
         const SB_KEY = 'sb_publishable_xZtl0fMCuBuMAx0PoPQ_GA_ybiiKnIi';
         const _db = supabase.createClient(SB_URL, SB_KEY);
-        let isSignup = false;
 
-        function showSection(id) {
-            ['section-slides', 'section-auth', 'section-dashboard'].forEach(s => document.getElementById(s).classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
+        let currentUser = null;
+        let allGigs = [];
+
+        // AUTH LOGIC
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const { data, error } = await _db.auth.signInWithPassword({
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPass').value
+            });
+            if (error) alert(error.message);
+            else checkSession();
+        };
+
+        document.getElementById('regForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('r-email').value;
+            const password = document.getElementById('regPass').value;
+            const fullName = document.getElementById('r-fullname').value;
+            const nick = document.getElementById('r-nick').value;
+
+            const { data, error } = await _db.auth.signUp({ email, password });
+            if (error) return alert(error.message);
+
+            if (data.user) {
+                await _db.from('profiles').insert([{
+                    id: data.user.id,
+                    full_name: fullName,
+                    nickname: nick,
+                    university: document.getElementById('r-uni').value
+                }]);
+                showVerify();
+            }
+        };
+
+        async function checkSession() {
+            const { data: { session } } = await _db.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                showDashboard();
+                loadProfileData();
+            }
         }
 
-        function toggleAuth() {
-            isSignup = !isSignup;
-            document.getElementById('signup-fields').classList.toggle('hidden');
-            document.getElementById('auth-title').innerText = isSignup ? 'Create Account' : 'Sign In';
+        async function signOut() {
+            await _db.auth.signOut();
+            location.reload();
         }
 
-        function changeView(view) {
-            ['view-board', 'view-post', 'view-profile'].forEach(v => document.getElementById(v).classList.add('hidden'));
-            ['nav-board', 'nav-post', 'nav-profile'].forEach(n => document.getElementById(n).classList.remove('active-view'));
-            document.getElementById(view).classList.remove('hidden');
-            document.getElementById('nav-' + view.split('-')[1]).classList.add('active-view');
-            document.getElementById('view-title').innerText = view === 'view-board' ? 'Marketplace' : (view === 'view-post' ? 'Create Listing' : 'Student Profile');
-        }
-
-        // BYPASS LOGIN FOR QUICK DEMO
-        function bypassLogin() {
-            showSection('section-dashboard');
-            changeView('view-board');
-            renderGigs();
-        }
-
-        function renderGigs() {
-            // Mock data if database is empty or not connected
-            const mock = [{title: "Web Design", price: "15000", loc: "Choba", desc: "Build a landing page for my final year project."}, {title: "Laundry", price: "2000", loc: "Hostel Block C", desc: "Wash and fold 2 bags of clothes."}];
-            document.getElementById('view-board').innerHTML = mock.map(g => `
-                <div class="glass p-6 rounded-3xl border-l-4 border-sky-500">
-                    <h4 class="font-bold text-xl mb-1">${g.title}</h4>
-                    <span class="text-green-400 font-bold">₦${g.price}</span>
-                    <p class="text-slate-500 text-sm my-4">${g.desc}</p>
-                    <div class="flex justify-between items-center text-[10px] text-slate-600 font-bold uppercase tracking-widest pt-4 border-t border-white/5">
-                        <span>📍 ${g.loc}</span>
-                        <button onclick="alert('Applying...')" class="bg-sky-500/10 text-sky-400 px-4 py-2 rounded-lg">Apply</button>
+        // DATABASE ACTIONS
+        async function renderGigs() {
+            const { data, error } = await _db.from('gigs').select('*, profiles(nickname)').order('created_at', { ascending: false });
+            if (data) {
+                allGigs = data;
+                const list = document.getElementById('gig-list');
+                list.innerHTML = data.map(g => `
+                    <div class="glass-card p-6 rounded-[2rem] hover:shadow-xl transition-all border-l-4 border-l-blue-500">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="font-black text-xl text-blue-600">${g.title}</h3>
+                                <p class="text-xs font-bold text-slate-400 uppercase">@${g.profiles?.nickname || 'Student'}</p>
+                            </div>
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-black">₦${g.price}</span>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-6 line-clamp-2">${g.description}</p>
+                        <button onclick="openApplyModal('${g.id}')" class="w-full bg-slate-100 dark:bg-slate-700 text-blue-600 font-black py-3 rounded-xl hover:bg-blue-600 hover:text-white transition-all">Apply for this Gig</button>
                     </div>
+                `).join('');
+            }
+        }
+
+        document.getElementById('postForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const { error } = await _db.from('gigs').insert([{
+                user_id: currentUser.id,
+                title: document.getElementById('p-title').value,
+                price: document.getElementById('p-price').value,
+                location: document.getElementById('p-loc').value,
+                description: document.getElementById('p-desc').value
+            }]);
+            if (error) alert(error.message);
+            else {
+                alert("Gig is Live!");
+                document.getElementById('postForm').reset();
+                showPage('job-board');
+                renderGigs();
+            }
+        };
+
+        function openApplyModal(id) {
+            document.getElementById('apply-gig-id').value = id;
+            toggleModal('apply', true);
+        }
+
+        document.getElementById('applyForm').onsubmit = async (e) => {
+   e.preventDefault();
+            const { error } = await _db.from('applications').insert([{
+                gig_id: document.getElementById('apply-gig-id').value,
+                applicant_id: currentUser.id,
+                pitch: document.getElementById('a-qual').value,
+                contact: document.getElementById('a-phone').value
+            }]);
+            if (error) alert(error.message);
+            else {
+                alert("Application Sent!");
+                toggleModal('apply', false);
+            }
+        };
+
+        async function loadProfileData() {
+            const { data } = await _db.from('profiles').select('*').eq('id', currentUser.id).single();
+            if (data) {
+                document.getElementById('prof-name').value = data.full_name;
+                document.getElementById('prof-uni').value = data.university;
+                document.getElementById('header-avatar').src = `https://ui-avatars.com/api/?name=${data.nickname}&background=3b82f6&color=fff`;
+            }
+        }
+
+        // SEARCH & UI HELPERS (KEEPING YOUR ORIGINAL FUNCTIONS)
+        function searchGigs() {
+            const val = document.getElementById('gigSearch').value.toLowerCase();
+            const filtered = allGigs.filter(g => g.title.toLowerCase().includes(val) || g.description.toLowerCase().includes(val));
+            document.getElementById('gig-list').innerHTML = filtered.map(g => `
+                <div class="glass-card p-6 rounded-[2rem] border-l-4 border-l-blue-500">
+                    <h3 class="font-black text-xl text-blue-600">${g.title}</h3>
+                    <p class="text-xs font-bold text-slate-400 mb-4">₦${g.price}</p>
+                    <button onclick="openApplyModal('${g.id}')" class="w-full bg-slate-100 font-black py-3 rounded-xl">Apply</button>
                 </div>
             `).join('');
         }
+
+        function toggleAuth(v) { document.getElementById('login-view').classList.toggle('hidden', v === 'reg'); document.getElementById('reg-view').classList.toggle('hidden', v === 'login'); }
+        function togglePass(id) { const x = document.getElementById(id); x.type = x.type === "password" ? "text" : "password"; }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sidebar-closed'); }
+        function toggleModal(id, show) { document.getElementById(`${id}-modal`).classList.toggle('hidden', !show); }
+        function showVerify() { document.getElementById('auth-container').classList.add('hidden'); document.getElementById('verify-screen').classList.remove('hidden'); }
+        function showDashboard() { document.getElementById('auth-container').classList.add('hidden'); document.getElementById('verify-screen').classList.add('hidden'); document.getElementById('dashboard').classList.remove('hidden'); renderGigs(); }
+        function showPage(pageId) {
+            document.querySelectorAll('#content-pages section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            if(event) event.currentTarget.classList.add('active');
+            if(window.innerWidth < 768) toggleSidebar();
+        }
+        function validatePass(v) {
+            const up = /[A-Z]/.test(v), low = /[a-z]/.test(v), spec = /[!@#$%]/.test(v), len = v.length >= 8;
+            document.getElementById('up').className = up ? 'requirement met' : 'requirement';
+            document.getElementById('low').className = low ? 'requirement met' : 'requirement';
+            document.getElementById('spec').className = spec ? 'requirement met' : 'requirement';
+            document.getElementById('len').className = len ? 'requirement met' : 'requirement';
+            const btn = document.getElementById('regBtn');
+            btn.disabled = !(up && low && spec && len);
+            btn.style.opacity = btn.disabled ? "0.5" : "1";
+        }
+        function setTheme(t) { if(t === 'dark') document.body.classList.add('dark-mode'); else document.body.classList.remove('dark-mode'); }
+        
+        window.onload = () => {
+            window.intlTelInput(document.querySelector("#phone"), { initialCountry: "ng" });
+            checkSession();
+        };
     </script>
 </body>
 </html>
