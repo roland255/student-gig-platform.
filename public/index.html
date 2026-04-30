@@ -3,235 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GigPort | UniPort Student Marketplace</title>
+    <title>GigPort | UniPort Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f8fafc; }
-        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(56, 189, 248, 0.1); }
-        .sky-gradient { background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: white; }
+        .sky-glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(56, 189, 248, 0.2); }
         .hidden { display: none; }
-        .modal-active { display: flex !important; }
+        input, textarea { color: white !important; }
     </style>
 </head>
 <body>
 
-    <div id="auth-page" class="min-h-screen flex items-center justify-center p-6 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-sky-900/20 via-slate-950 to-slate-950">
-        <div class="glass w-full max-w-md p-8 rounded-3xl shadow-2xl">
+    <div id="auth-page" class="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-slate-950 via-sky-950/30 to-slate-950">
+        <div class="sky-glass w-full max-w-md p-8 rounded-3xl shadow-2xl">
             <div class="text-center mb-8">
-                <div class="inline-block p-3 bg-sky-500/10 rounded-2xl mb-4">
-                    <svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                </div>
-                <h1 class="text-3xl font-bold tracking-tight">GigPort</h1>
-                <p id="auth-subtitle" class="text-slate-400 text-sm mt-2">Sign in to start earning at UniPort</p>
+                <h1 class="text-4xl font-bold text-white">Gig<span class="text-sky-400">Port</span></h1>
+                <p id="auth-status" class="text-slate-400 mt-2">Welcome back, Student</p>
             </div>
 
             <form id="auth-form" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Email Address</label>
-                    <input type="email" id="email" class="w-full bg-slate-900 border border-slate-800 p-3 rounded-xl focus:ring-2 focus:ring-sky-500 outline-none transition" placeholder="u2022@uniport.edu.ng" required>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Password</label>
-                    <input type="password" id="password" class="w-full bg-slate-900 border border-slate-800 p-3 rounded-xl focus:ring-2 focus:ring-sky-500 outline-none transition" placeholder="••••••••" required>
-                </div>
+                <input type="email" id="email" placeholder="UniPort Email" class="w-full p-4 bg-slate-900 border border-slate-800 rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none transition" required>
+                <input type="password" id="password" placeholder="Password" class="w-full p-4 bg-slate-900 border border-slate-800 rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none transition" required>
                 
-                <div class="flex justify-between items-center text-xs">
-                    <label class="flex items-center text-slate-400">
-                        <input type="checkbox" class="mr-2 rounded bg-slate-800 border-slate-700 text-sky-500" checked> Agree to <span class="text-sky-400 ml-1 cursor-pointer hover:underline" onclick="toggleModal('terms-modal')">Terms</span>
-                    </label>
-                    <button type="button" onclick="handleForgotPassword()" class="text-sky-400 hover:text-sky-300">Forgot Password?</button>
+                <div id="signup-fields" class="hidden space-y-4">
+                    <input type="text" id="full-name" placeholder="Full Name" class="w-full p-4 bg-slate-900 border border-slate-800 rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none">
+                    <p class="text-[10px] text-slate-500 px-2">By joining, you agree to the UniPort Marketplace <span class="text-sky-400">Terms & Conditions</span>.</p>
                 </div>
 
-                <button type="submit" id="main-auth-btn" class="w-full sky-gradient py-3 rounded-xl font-bold text-white shadow-lg shadow-sky-500/20 transform active:scale-95 transition">Login</button>
+                <button type="submit" id="submit-btn" class="w-full py-4 bg-sky-600 hover:bg-sky-500 rounded-2xl font-bold shadow-lg shadow-sky-500/20 transition transform active:scale-95">Login</button>
             </form>
 
-            <p class="text-center text-sm text-slate-400 mt-6">
-                <span id="auth-toggle-text">Don't have an account?</span>
-                <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-sky-400 font-semibold hover:underline ml-1">Create Account</button>
-            </p>
+            <button onclick="toggleMode()" id="toggle-btn" class="w-full mt-6 text-sm text-slate-400 hover:text-sky-400 transition underline underline-offset-4">Don't have an account? Create one</button>
+            
+            <button onclick="alert('Password reset link sent to your student email.')" class="w-full mt-4 text-[10px] text-slate-600 hover:text-slate-400">Forgot Password?</button>
         </div>
     </div>
 
-    <div id="dashboard-page" class="hidden min-h-screen bg-slate-950">
-        <header class="glass sticky top-0 z-10 border-b border-slate-800 px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <span class="text-2xl font-extrabold text-white">Gig<span class="text-sky-500">Port</span></span>
-                <span class="bg-sky-500/10 text-sky-400 text-[10px] px-2 py-0.5 rounded-full border border-sky-400/20">UNIPORT</span>
+    <div id="dashboard-page" class="hidden min-h-screen">
+        <nav class="p-6 border-b border-slate-800 flex justify-between items-center sky-glass sticky top-0 z-50">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl font-bold">Gig<span class="text-sky-400">Port</span></span>
+                <span class="text-[10px] bg-sky-500/10 text-sky-400 border border-sky-400/20 px-2 py-0.5 rounded-full">LIVE PORTAL</span>
             </div>
-            <button onclick="handleLogout()" class="text-slate-400 hover:text-red-400 transition text-sm font-medium">Logout</button>
-        </header>
+            <button onclick="logout()" class="text-slate-400 hover:text-red-400 text-sm font-semibold">Sign Out</button>
+        </nav>
 
         <main class="max-w-6xl mx-auto p-6 grid lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-7 space-y-6">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-xl font-bold">Active Opportunities</h2>
-                    <div class="flex space-x-2">
-                        <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
-                        <span class="text-xs text-slate-400 uppercase tracking-widest">Live Feed</span>
-                    </div>
-                </div>
-                <div id="gig-feed" class="space-y-4">
-                    </div>
-            </div>
-
             <div class="lg:col-span-5">
-                <div class="glass p-6 rounded-3xl sticky top-24 border-t-2 border-sky-500">
-                    <h2 class="text-lg font-bold mb-4 flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                        Post a Gig
+                <div class="sky-glass p-6 rounded-3xl border-t-4 border-sky-500 shadow-xl">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Post New Gig
                     </h2>
                     <form id="gig-form" class="space-y-4">
-                        <input type="text" id="gig-title" placeholder="What service do you need?" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none focus:border-sky-500 text-sm" required>
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="number" id="gig-price" placeholder="Budget (₦)" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none focus:border-sky-500 text-sm" required>
-                            <input type="text" id="gig-location" placeholder="Location (Choba/Abuja)" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none focus:border-sky-500 text-sm" required>
+                        <input type="text" id="g-title" placeholder="Job Title (e.g. Graphics Design)" class="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl outline-none focus:border-sky-500" required>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="number" id="g-price" placeholder="Price (₦)" class="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl outline-none focus:border-sky-500" required>
+                            <input type="text" id="g-loc" placeholder="Location (e.g. Choba)" class="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl outline-none focus:border-sky-500" required>
                         </div>
-                        <textarea id="gig-desc" placeholder="Details (e.g., I need a logo for my CSC 400 project...)" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none focus:border-sky-500 text-sm h-28" required></textarea>
-                        <button type="submit" id="post-btn" class="w-full sky-gradient py-3 rounded-xl font-bold shadow-lg shadow-sky-500/20 active:scale-95 transition">Post Successfully</button>
+                        <textarea id="g-desc" placeholder="Details of the job..." class="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl outline-none focus:border-sky-500 h-32" required></textarea>
+                        <button type="submit" id="post-btn" class="w-full py-4 bg-sky-600 hover:bg-sky-500 rounded-xl font-bold shadow-xl shadow-sky-900/40 transform active:scale-95 transition">Post Gig Successfully</button>
                     </form>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    Live Market Feed
+                </h2>
+                <div id="feed" class="space-y-4">
+                    <div class="text-center py-20 text-slate-500">Connecting to database...</div>
                 </div>
             </div>
         </main>
     </div>
 
-    <div id="terms-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 items-center justify-center p-6 backdrop-blur-sm">
-        <div class="glass max-w-lg w-full p-8 rounded-3xl shadow-2xl relative">
-            <h2 class="text-xl font-bold mb-4">Terms & Conditions</h2>
-            <div class="text-slate-400 text-sm h-64 overflow-y-auto space-y-4 pr-2">
-                <p>1. <strong>Academic Integrity:</strong> GigPort is for services like graphics, laundry, and delivery. Do not use this platform for exam malpractice or plagiarism.</p>
-                <p>2. <strong>Verification:</strong> You must be a verified UniPort student to engage in transactions.</p>
-                <p>3. <strong>Payment:</strong> GigPort is not responsible for payments. Ensure you agree on price before service starts.</p>
-                <p>4. <strong>Conduct:</strong> Any form of harassment or fraud will result in a permanent ban of your matriculation number.</p>
-            </div>
-            <button onclick="toggleModal('terms-modal')" class="mt-6 w-full py-3 bg-slate-800 rounded-xl font-bold hover:bg-slate-700">Close</button>
-        </div>
-    </div>
-
     <script>
-        // SUPABASE CONFIG (Replace these with your actual keys)
-        const SB_URL = 'YOUR_SUPABASE_URL';
-        const SB_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        const _client = supabase.createClient(SB_URL, SB_KEY);
+        // CONFIGURATION WITH YOUR LINKS
+        const SB_URL = 'https://ybfamugobqgkdbezkgyw.supabase.co';
+        const SB_KEY = 'sb_publishable_xZtl0fMCuBuMAx0PoPQ_GA_ybiiKnIi';
+        const _db = supabase.createClient(SB_URL, SB_KEY);
 
         let isSignup = false;
 
-        function toggleAuthMode() {
+        function toggleMode() {
             isSignup = !isSignup;
-            document.getElementById('auth-subtitle').innerText = isSignup ? "Join the largest student marketplace" : "Sign in to start earning at UniPort";
-            document.getElementById('main-auth-btn').innerText = isSignup ? "Create Account" : "Login";
-            document.getElementById('auth-toggle-text').innerText = isSignup ? "Already have an account?" : "Don't have an account?";
-            document.getElementById('auth-toggle-btn').innerText = isSignup ? "Login" : "Create Account";
+            document.getElementById('signup-fields').classList.toggle('hidden');
+            document.getElementById('submit-btn').innerText = isSignup ? 'Create Account' : 'Login';
+            document.getElementById('auth-status').innerText = isSignup ? 'Create your student profile' : 'Welcome back, Student';
+            document.getElementById('toggle-btn').innerText = isSignup ? 'Already have an account? Login' : "Don't have an account? Create one";
         }
 
-        function toggleModal(id) {
-            document.getElementById(id).classList.toggle('modal-active');
-        }
-
-        async function handleForgotPassword() {
-            const email = document.getElementById('email').value;
-            if(!email) return alert("Enter your email first!");
-            const { error } = await _client.auth.resetPasswordForEmail(email);
-            alert(error ? error.message : "Password reset link sent to your email!");
-        }
-
+        // AUTH HANDLER
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const btn = document.getElementById('main-auth-btn');
+            const btn = document.getElementById('submit-btn');
             
-            btn.innerText = "Processing...";
+            btn.innerText = isSignup ? "Creating Account..." : "Signing In...";
+            
             const { data, error } = isSignup ? 
-                await _client.auth.signUp({ email, password }) : 
-                await _client.auth.signInWithPassword({ email, password });
+                await _db.auth.signUp({ email, password }) : 
+                await _db.auth.signInWithPassword({ email, password });
 
-            if(error) {
+            if (error) {
                 alert(error.message);
                 btn.innerText = isSignup ? "Create Account" : "Login";
-            } else if (isSignup && !data.session) {
-                alert("Account created! Please check your email for verification.");
-            } else {
-                initDashboard();
+            } else if (data.user) {
+                if (isSignup && !data.session) alert("Please check your email for a confirmation link!");
+                else showDashboard();
             }
         });
 
-        async function initDashboard() {
+        function showDashboard() {
             document.getElementById('auth-page').classList.add('hidden');
             document.getElementById('dashboard-page').classList.remove('hidden');
-            fetchGigs();
-            setupRealtime();
+            loadGigs();
+            // REALTIME FIX: Listens for changes and updates UI automatically
+            _db.channel('public:gigs').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gigs' }, loadGigs).subscribe();
         }
 
-        async function fetchGigs() {
-            const { data, error } = await _client.from('gigs').select('*').order('created_at', { ascending: false });
-            if (!error) renderGigs(data);
-        }
-
-        function renderGigs(gigs) {
-            const feed = document.getElementById('gig-feed');
-            if(gigs.length === 0) {
-                feed.innerHTML = `<div class="glass p-12 text-center rounded-3xl text-slate-500">No gigs available. Start the hustle!</div>`;
+        // DATA HANDLER
+        async function loadGigs() {
+            const { data, error } = await _db.from('gigs').select('*').order('created_at', { ascending: false });
+            const feed = document.getElementById('feed');
+            
+            if (error) {
+                feed.innerHTML = `<p class="text-red-400">Error loading gigs. Check your table policies.</p>`;
                 return;
             }
-            feed.innerHTML = gigs.map(g => `
-                <div class="glass p-6 rounded-3xl hover:border-sky-500/50 transition cursor-pointer group">
+
+            if (data.length === 0) {
+                feed.innerHTML = `<div class="sky-glass p-10 text-center rounded-3xl text-slate-500">No gigs posted yet.</div>`;
+                return;
+            }
+
+            feed.innerHTML = data.map(g => `
+                <div class="sky-glass p-6 rounded-3xl hover:border-sky-400 transition cursor-default">
                     <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="font-bold text-lg group-hover:text-sky-400 transition">${g.title}</h3>
-                            <div class="flex items-center space-x-3 text-xs text-slate-500 mt-1">
-                                <span>📍 ${g.location}</span>
-                                <span>•</span>
-                                <span>🕒 ${new Date(g.created_at).toLocaleDateString()}</span>
-                            </div>
-                        </div>
-                        <span class="text-green-400 font-bold bg-green-400/10 px-3 py-1 rounded-full text-sm">₦${Number(g.price).toLocaleString()}</span>
+                        <h3 class="text-lg font-bold text-sky-100">${g.title}</h3>
+                        <span class="text-green-400 font-bold bg-green-400/10 px-3 py-1 rounded-full text-xs">₦${Number(g.price).toLocaleString()}</span>
                     </div>
-                    <p class="text-slate-400 text-sm mt-4 line-clamp-3">${g.description}</p>
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">${g.description}</p>
+                    <div class="mt-4 pt-4 border-t border-slate-800 flex justify-between text-[10px] text-slate-500 uppercase tracking-widest">
+                        <span>📍 ${g.location}</span>
+                        <span>🕒 ${new Date(g.created_at).toLocaleDateString()}</span>
+                    </div>
                 </div>
             `).join('');
         }
 
+        // POST HANDLER
         document.getElementById('gig-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('post-btn');
-            btn.innerText = "Publishing...";
+            btn.innerText = "Processing...";
 
-            const { data: { user } } = await _client.auth.getUser();
+            const { data: { user } } = await _db.auth.getUser();
             const gig = {
-                title: document.getElementById('gig-title').value,
-                price: document.getElementById('gig-price').value,
-                location: document.getElementById('gig-location').value,
-                description: document.getElementById('gig-desc').value,
+                title: document.getElementById('g-title').value,
+                price: document.getElementById('g-price').value,
+                location: document.getElementById('g-loc').value,
+                description: document.getElementById('g-desc').value,
                 user_id: user.id
             };
 
-            const { error } = await _client.from('gigs').insert([gig]);
-            if(error) alert(error.message);
-            else {
+            const { data, error } = await _db.from('gigs').insert([gig]).select();
+            
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
                 alert("Gig Posted Successfully!");
                 document.getElementById('gig-form').reset();
-                fetchGigs();
+                loadGigs(); // UI REFRESH FIX
             }
-            btn.innerText = "Post Successfully";
+            btn.innerText = "Post Gig Successfully";
         });
 
-        function setupRealtime() {
-            _client.channel('any').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gigs' }, () => fetchGigs()).subscribe();
-        }
+        async function logout() { await _db.auth.signOut(); location.reload(); }
 
-        async function handleLogout() {
-            await _client.auth.signOut();
-            location.reload();
-        }
-
-        // Auto-check auth state
         window.onload = async () => {
-            const { data: { user } } = await _client.auth.getUser();
-            if(user) initDashboard();
+            const { data: { session } } = await _db.auth.getSession();
+            if (session) showDashboard();
         }
     </script>
 </body>
-    </html>
-    
+</html>
