@@ -283,4 +283,21 @@
         
         function approveApplicant(btn) {
             btn.textContent = "Application Approved ✓";
-            btn.className = "bg-slate-100 text-green-700 px-4 py-2 rounded-xl tex
+            btn.className = "bg-slate-100 text-green-700 px-4 py-2 rounded-xl text-[10px] font-black";
+            alert('Applicant has been notified of your approval!');
+        }
+
+        // INIT
+        window.onload = () => {
+            fetch('https://restcountries.com/v3.1/all?fields=name,cca2').then(r => r.json()).then(data => {
+                const sel = document.getElementById('country');
+                sel.innerHTML = '<option value="">Select Country</option>';
+                data.sort((a,b)=>a.name.common.localeCompare(b.name.common)).forEach(c => {
+                    let o = document.createElement('option'); o.value = c.cca2; o.textContent = c.name.common; sel.appendChild(o);
+                });
+            });
+            window.intlTelInput(document.querySelector("#phone"), { initialCountry: "ng" });
+        };
+    </script>
+</body>
+</html>
