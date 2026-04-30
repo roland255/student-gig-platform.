@@ -18,7 +18,7 @@
         body { background-color: var(--bg); color: var(--text); transition: background 0.4s ease; overflow-x: hidden; }
         .glass-card { background: var(--card); border: 1px solid var(--border); }
         .custom-input { background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.75rem 1rem; width: 100%; color: var(--text); outline: none; }
-        .custom-input:focus { border-color: var(--accent); ring: 2px solid var(--accent); }
+        .custom-input:focus { border-color: var(--accent); }
         
         .hidden { display: none !important; }
         #sidebar { transition: transform 0.3s ease; z-index: 100; }
@@ -38,7 +38,7 @@
         <div class="w-full max-w-4xl glass-card rounded-[3rem] shadow-2xl p-8 md:p-12">
             <div class="text-center mb-6">
                 <h1 class="text-4xl font-black text-blue-600 italic">GigPort.</h1>
-                <p class="text-slate-400 font-bold text-sm">Empowering UniPort Students</p>
+                <p class="text-slate-400 font-bold text-sm">Professional Student Marketplace</p>
             </div>
 
             <div id="login-view">
@@ -48,117 +48,126 @@
                         <input type="password" id="loginPass" placeholder="Password" class="custom-input" required>
                         <button type="button" onclick="togglePass('loginPass')" class="absolute right-4 top-4 text-slate-400"><i class="fas fa-eye"></i></button>
                     </div>
-                    <button type="submit" class="w-full bg-blue-600 text-white p-4 rounded-full font-bold shadow-lg mt-4">Login to Portal</button>
+                    <div class="text-right px-2">
+                        <button type="button" onclick="toggleModal('forgot', true)" class="text-xs font-bold text-blue-600 hover:underline">Forgot Password?</button>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white p-4 rounded-full font-bold shadow-lg mt-4">Sign In</button>
                 </form>
-                <p class="text-center mt-8 text-sm font-bold">New Student? <button onclick="toggleAuth('reg')" class="text-blue-600 underline">Register Here</button></p>
+                <p class="text-center mt-8 text-sm font-bold">New? <button onclick="toggleAuth('reg')" class="text-blue-600 underline">Create Account</button></p>
             </div>
 
             <div id="reg-view" class="hidden">
                 <form onsubmit="event.preventDefault(); showVerify();" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" placeholder="Full Name (e.g. Emereje Roland)" class="custom-input" required>
+                    <input type="text" placeholder="Full Name" class="custom-input" required>
                     <input type="text" placeholder="Matric Number" class="custom-input" required>
                     <input type="email" placeholder="Student Email" class="custom-input" required>
                     <input type="tel" id="phone" class="custom-input" required>
                     <div class="md:col-span-2">
-                        <input type="password" id="regPass" oninput="validatePass(this.value)" placeholder="Create Password" class="custom-input" required>
+                        <input type="password" id="regPass" oninput="validatePass(this.value)" placeholder="Strong Password" class="custom-input" required>
                         <div class="flex gap-3 mt-2 px-2"><span id="up" class="requirement">ABC</span><span id="low" class="requirement">abc</span><span id="spec" class="requirement">#@!</span><span id="len" class="requirement">8+</span></div>
                     </div>
-                    <button type="submit" id="regBtn" class="md:col-span-2 w-full bg-blue-700 text-white p-4 rounded-3xl font-black opacity-50" disabled>Create Student Account</button>
+                    <div class="md:col-span-2 flex items-start gap-3 px-2">
+                        <input type="checkbox" id="termsCheck" required class="mt-1">
+                        <label for="termsCheck" class="text-xs text-slate-500 leading-tight">I agree to the <button type="button" onclick="toggleModal('terms', true)" class="text-blue-600 font-bold underline">Terms & Conditions</button></label>
+                    </div>
+                    <button type="submit" id="regBtn" class="md:col-span-2 w-full bg-blue-700 text-white p-4 rounded-3xl font-black opacity-50" disabled>Create Account</button>
                 </form>
-                <p class="text-center mt-6 text-sm font-bold">Already registered? <button onclick="toggleAuth('login')" class="text-blue-600 underline">Sign In</button></p>
             </div>
         </div>
-    </div>
-
-    <div id="verify-screen" class="hidden fixed inset-0 bg-white dark:bg-slate-900 z-[200] flex flex-col items-center justify-center p-6 text-center">
-        <h2 class="text-3xl font-black mb-2">Verify Account</h2>
-        <p class="text-slate-400 mb-8 max-w-xs text-sm">Enter the code sent to your student email.</p>
-        <div class="flex gap-2 mb-8">
-            <input type="text" maxlength="1" class="otp-input"><input type="text" maxlength="1" class="otp-input"><input type="text" maxlength="1" class="otp-input"><input type="text" maxlength="1" class="otp-input"><input type="text" maxlength="1" class="otp-input"><input type="text" maxlength="1" class="otp-input">
-        </div>
-        <button onclick="showDashboard()" class="bg-blue-600 text-white px-10 py-3 rounded-full font-bold mb-4 shadow-lg">Complete Verification</button>
     </div>
 
     <div id="dashboard" class="hidden fixed inset-0 flex overflow-hidden">
         <aside id="sidebar" class="fixed md:relative w-72 h-full glass-card border-r p-6 sidebar-closed md:sidebar-open bg-white dark:bg-slate-900">
-            <div class="flex justify-between items-center mb-10">
-                <h2 class="text-2xl font-black text-blue-600 italic">GigPort.</h2>
-                <button onclick="toggleSidebar()" class="md:hidden"><i class="fas fa-times"></i></button>
-            </div>
-            <nav class="space-y-3 flex-1">
-                <div onclick="showPage('job-board')" class="nav-link active" id="nav-job-board"><i class="fas fa-briefcase"></i> Job Board</div>
+            <h2 class="text-2xl font-black text-blue-600 mb-8 italic">GigPort.</h2>
+            <nav class="space-y-2 flex-1">
+                <div onclick="showPage('job-board')" class="nav-link active" id="nav-job-board"><i class="fas fa-th-large"></i> Job Board</div>
                 <div onclick="showPage('post-gig')" class="nav-link" id="nav-post-gig"><i class="fas fa-plus-circle"></i> Post a Gig</div>
+                <div onclick="showPage('manage')" class="nav-link" id="nav-manage"><i class="fas fa-tasks"></i> Manage Gigs</div>
                 <div onclick="showPage('profile')" class="nav-link" id="nav-profile"><i class="fas fa-user-circle"></i> My Profile</div>
-                <div onclick="showPage('settings')" class="nav-link" id="nav-settings"><i class="fas fa-cog"></i> Settings</div>
+                <div onclick="showPage('settings')" class="nav-link" id="nav-settings"><i class="fas fa-adjust"></i> Appearance</div>
             </nav>
-            <div class="pt-6 border-t mt-auto">
-                <div onclick="location.reload()" class="nav-link text-red-500 font-bold cursor-pointer"><i class="fas fa-sign-out-alt"></i> Logout</div>
-            </div>
+            <div class="pt-6 border-t"><div onclick="location.reload()" class="nav-link text-red-500 font-bold cursor-pointer"><i class="fas fa-power-off"></i> Logout</div></div>
         </aside>
 
-        <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50 dark:bg-slate-950">
-            <header class="p-4 glass-card border-b flex items-center px-6">
-                <button onclick="toggleSidebar()" class="md:hidden p-2 mr-4"><i class="fas fa-bars text-xl"></i></button>
-                <div class="relative flex-1 max-w-md">
-                    <i class="fas fa-search absolute left-4 top-3.5 text-blue-400"></i>
-                    <input type="text" id="gigSearch" onkeyup="searchGigs()" placeholder="Search gigs (e.g. Davos, Easy Money)..." class="w-full pl-12 pr-4 py-3 rounded-2xl custom-input">
-                </div>
+        <main class="flex-1 flex flex-col h-full overflow-hidden">
+            <header class="p-4 glass-card border-b flex justify-between items-center px-6">
+                <button onclick="toggleSidebar()" class="md:hidden p-2"><i class="fas fa-bars text-xl"></i></button>
+                <input type="text" id="gigSearch" onkeyup="searchGigs()" placeholder="Search (Davos, Easy Money...)" class="w-full max-w-md mx-4 pl-4 py-3 rounded-2xl custom-input">
             </header>
 
-            <div id="content-pages" class="flex-1 overflow-y-auto p-6 md:p-10">
+            <div id="content-pages" class="flex-1 overflow-y-auto p-6 md:p-10 bg-slate-50 dark:bg-slate-950">
                 <section id="page-job-board">
-                    <h2 class="text-3xl font-black mb-2">Available Gigs</h2>
-                    <p class="text-slate-400 font-bold text-sm mb-8">Connecting students with opportunities</p>
+                    <h2 class="text-3xl font-black mb-6">Job Board</h2>
                     <div id="gig-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
                 </section>
 
                 <section id="page-post-gig" class="hidden max-w-2xl mx-auto">
-                    <h2 class="text-3xl font-black text-center mb-8">Create New Listing</h2>
+                    <h2 class="text-3xl font-black text-center mb-6">Hire a Student</h2>
                     <form onsubmit="handlePost(event)" class="space-y-4 glass-card p-8 rounded-[2.5rem]">
-                        <input type="text" id="p-title" placeholder="What do you need help with?" class="custom-input" required>
-                        <div class="grid grid-cols-2 gap-4">
-                            <input type="number" id="p-price" placeholder="Budget (₦)" class="custom-input" required>
-                            <input type="text" id="p-loc" placeholder="Location" class="custom-input" required>
-                        </div>
-                        <textarea id="p-desc" placeholder="Details about the gig..." class="custom-input h-40" required></textarea>
-                        <button type="submit" class="w-full bg-blue-600 text-white p-5 rounded-2xl font-black text-lg shadow-xl">List Gig</button>
+                        <input type="text" id="p-title" placeholder="Gig Title" class="custom-input" required>
+                        <input type="number" id="p-price" placeholder="Budget (₦)" class="custom-input" required>
+                        <input type="text" id="p-loc" placeholder="Location" class="custom-input" required>
+                        <textarea id="p-desc" placeholder="Gig Description" class="custom-input h-32" required></textarea>
+                        <button type="submit" class="w-full bg-blue-600 text-white p-5 rounded-2xl font-black">Post Gig Now</button>
                     </form>
                 </section>
 
+                <section id="page-manage" class="hidden">
+                    <h2 class="text-3xl font-black mb-6">Manage My Gigs</h2>
+                    <div id="my-gig-list" class="grid grid-cols-1 gap-4">
+                        <p class="text-slate-400 font-bold">You haven't posted any gigs yet.</p>
+                    </div>
+                </section>
+
                 <section id="page-profile" class="hidden max-w-3xl mx-auto">
-                    <h2 class="text-3xl font-black mb-8">Student Profile</h2>
-                    <div class="glass-card p-8 rounded-[2.5rem] space-y-8">
-                        <div class="flex flex-col items-center">
-                            <div class="relative w-32 h-32 mb-4">
-                                <img id="profile-preview" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=128" class="w-full h-full rounded-full border-4 border-blue-500 p-1">
-                                <label class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer"><i class="fas fa-camera"></i><input type="file" class="hidden" onchange="previewImage(event)"></label>
-                            </div>
+                    <h2 class="text-3xl font-black mb-8">Academic Profile</h2>
+                    <div class="glass-card p-8 rounded-[2.5rem] space-y-6">
+                        <div class="flex flex-col items-center mb-6">
+                            <img id="profile-preview" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=128" class="w-32 h-32 rounded-full border-4 border-blue-500 mb-4">
                             <h3 class="text-xl font-black">Emereje Roland</h3>
-                            <p class="text-blue-500 font-bold">U2022/5570255</p>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div><label class="text-xs font-black text-slate-400 ml-2">FULL NAME</label><input type="text" class="custom-input mt-1" value="Emereje Roland"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                            <div><label class="text-xs font-black text-slate-400 ml-2">NAME</label><input type="text" class="custom-input mt-1" value="Emereje Roland"></div>
                             <div><label class="text-xs font-black text-slate-400 ml-2">UNIVERSITY</label><input type="text" class="custom-input mt-1" value="University of Port Harcourt"></div>
                             <div><label class="text-xs font-black text-slate-400 ml-2">FACULTY</label><input type="text" class="custom-input mt-1" value="Science"></div>
                             <div><label class="text-xs font-black text-slate-400 ml-2">DEPARTMENT</label><input type="text" class="custom-input mt-1" value="Computer Science"></div>
                         </div>
-                        <button onclick="alert('Academic Profile Updated!')" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black">Update Academic Details</button>
                     </div>
                 </section>
 
                 <section id="page-settings" class="hidden text-center max-w-md mx-auto">
-                    <h2 class="text-3xl font-black mb-8">Personalization</h2>
+                    <h2 class="text-3xl font-black mb-8">Appearance</h2>
                     <div class="grid grid-cols-1 gap-4">
-                        <button onclick="updateTheme('light')" class="glass-card p-4 rounded-2xl flex items-center justify-between font-bold"><i class="fas fa-sun text-yellow-500"></i> Light Mode</button>
-                        <button onclick="updateTheme('dark')" class="glass-card p-4 rounded-2xl flex items-center justify-between font-bold"><i class="fas fa-moon text-blue-500"></i> Dark Mode</button>
+                        <button onclick="updateTheme('light')" class="glass-card p-4 rounded-2xl font-bold">Light Mode</button>
+                        <button onclick="updateTheme('dark')" class="glass-card p-4 rounded-2xl font-bold">Dark Mode</button>
                     </div>
                 </section>
             </div>
         </main>
     </div>
 
+    <div id="forgot-modal" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-[2.5rem] p-8">
+            <h2 class="text-2xl font-black mb-4">Reset Password</h2>
+            <p class="text-sm text-slate-400 mb-4">Enter your student email to receive a reset link.</p>
+            <input type="email" placeholder="Email" class="custom-input mb-4">
+            <button onclick="toggleModal('forgot', false)" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black">Send Reset Email</button>
+        </div>
+    </div>
+
+    <div id="terms-modal" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[2.5rem] p-10">
+            <h3 class="font-black text-2xl mb-6">Terms & Conditions</h3>
+            <div class="text-sm text-slate-500 h-64 overflow-y-auto space-y-4 pr-2">
+                <p>1. <strong>Academic Integrity:</strong> This platform is for legitimate student gigs (tutoring, delivery, etc.). Do not use it for academic fraud or exam malpractice.</p>
+                <p>2. <strong>Verification:</strong> Only students with valid university credentials are permitted to use this platform.</p>
+                <p>3. <strong>Safety:</strong> Always meet in public university locations (Library, Choba Gate, etc.) for physical gig completions.</p>
+            </div>
+            <button onclick="toggleModal('terms', false)" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black mt-6">I Understand</button>
+        </div>
+    </div>
+
     <script>
-        // Supabase Live Integration
         const supabaseUrl = 'https://ybfamugobqgkdbezkgyw.supabase.co'; 
         const supabaseKey = 'sb_publishable_xZtl0fMCuBuMAx0PoPQ_GA_ybiiKnIi'; 
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
@@ -167,12 +176,7 @@
 
         async function fetchGigs() {
             const { data, error } = await _supabase.from('gigs').select('*').order('id', { ascending: false });
-            if (!error) { 
-                localGigs = data; 
-                renderGigs(localGigs); 
-            } else {
-                console.error("Database Error:", error.message);
-            }
+            if (!error) { localGigs = data; renderGigs(localGigs); }
         }
 
         async function handlePost(e) {
@@ -184,45 +188,25 @@
                 description: document.getElementById('p-desc').value 
             };
             const { error } = await _supabase.from('gigs').insert([gig]);
-            if (error) {
-                alert("Upload failed: " + error.message);
-            } else {
-                alert("Gig Successfully Listed!");
-                fetchGigs(); 
-                showPage('job-board');
-                e.target.reset();
-            }
+            if (error) alert(error.message);
+            else { alert("Gig Posted!"); fetchGigs(); showPage('job-board'); e.target.reset(); }
         }
 
         function renderGigs(list) {
-            const container = document.getElementById('gig-list');
-            if (list.length === 0) {
-                container.innerHTML = `<div class="col-span-full glass-card p-10 text-center font-bold text-slate-400">No student gigs available yet. Be the first!</div>`;
-                return;
-            }
-            container.innerHTML = list.map(g => `
-                <div class="glass-card p-6 rounded-[2.5rem] border-l-8 border-l-blue-500 shadow-sm hover:shadow-md transition-all">
+            document.getElementById('gig-list').innerHTML = list.map(g => `
+                <div class="glass-card p-6 rounded-[2.5rem] border-l-8 border-l-blue-500 shadow-sm">
                     <div class="flex justify-between items-start mb-4">
-                        <div class="flex-1">
-                            <h3 class="font-black text-xl text-blue-600 mb-1">${g.title}</h3>
-                            <div class="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase">
-                                <i class="fas fa-map-marker-alt"></i> ${g.location}
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <span class="bg-green-100 text-green-700 px-4 py-1 rounded-full text-sm font-black">₦${g.price}</span>
-                        </div>
+                        <div><h3 class="font-black text-xl text-blue-600">${g.title}</h3><p class="text-xs font-bold text-slate-400 uppercase"><i class="fas fa-map-marker-alt"></i> ${g.location}</p></div>
+                        <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-black">₦${g.price}</span>
                     </div>
-                    <p class="text-sm text-slate-500 mb-6 line-clamp-3">${g.description}</p>
-                    <button class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl shadow-lg active:scale-95 transition-transform">Claim Gig</button>
+                    <p class="text-sm text-slate-500 mb-6 line-clamp-2">${g.description}</p>
+                    <button class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl">Claim Gig</button>
                 </div>
             `).join('');
         }
 
-        // Dashboard Navigation
         function showDashboard() {
             document.getElementById('auth-container').classList.add('hidden');
-            document.getElementById('verify-screen').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             fetchGigs();
         }
@@ -235,17 +219,14 @@
             if(window.innerWidth < 768) toggleSidebar();
         }
 
-        // UI Logic
-        function toggleAuth(v) { 
-            document.getElementById('login-view').classList.toggle('hidden', v === 'reg'); 
-            document.getElementById('reg-view').classList.toggle('hidden', v === 'login'); 
-        }
+        function toggleAuth(v) { document.getElementById('login-view').classList.toggle('hidden', v === 'reg'); document.getElementById('reg-view').classList.toggle('hidden', v === 'login'); }
+        function toggleModal(id, show) { document.getElementById(`${id}-modal`).classList.toggle('hidden', !show); }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sidebar-closed'); }
         function togglePass(id) { const x = document.getElementById(id); x.type = x.type === "password" ? "text" : "password"; }
         
         function updateTheme(m) { 
             localStorage.setItem('theme', m); 
-            document.body.classList.toggle('dark-mode', m === 'dark');
+            document.body.classList.toggle('dark-mode', m === 'dark'); 
         }
 
         function validatePass(v) {
@@ -259,18 +240,7 @@
             renderGigs(localGigs.filter(g => g.title.toLowerCase().includes(val) || g.description.toLowerCase().includes(val)));
         }
 
-        function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = () => document.getElementById('profile-preview').src = reader.result;
-            reader.readAsDataURL(event.target.files[0]);
-        }
-
-        function showVerify() { 
-            document.getElementById('auth-container').classList.add('hidden'); 
-            document.getElementById('verify-screen').classList.remove('hidden'); 
-        }
-
-        window.onload = () => {
+        window.onload = () => { 
             const savedTheme = localStorage.getItem('theme');
             if(savedTheme) document.body.classList.toggle('dark-mode', savedTheme === 'dark');
             if(document.querySelector("#phone")) window.intlTelInput(document.querySelector("#phone"), { initialCountry: "ng" }); 
