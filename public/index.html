@@ -26,7 +26,7 @@
         .requirement.met { color: #22c55e; }
         .otp-input { width: 2.5rem; height: 3rem; text-align: center; font-weight: bold; border: 2px solid var(--border); border-radius: 10px; background: var(--card); color: var(--text); }
         .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-weight: 600; }
-        .nav-link:hover, .nav-link.active { background: #3b82f620; color: var(--accent); }
+        .nav-link:hover, .nav-link.active { background: #3b82f610; color: var(--accent); }
         .theme-btn { padding: 1rem; border-radius: 1rem; border: 2px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.2s; cursor: pointer; }
         .theme-btn.active { border-color: var(--accent); background: #3b82f610; }
     </style>
@@ -65,13 +65,8 @@
                         <input type="password" id="regPass" oninput="validatePass(this.value)" placeholder="Strong Password" class="custom-input" required>
                         <div class="flex gap-3 mt-2 px-2"><span id="up" class="requirement">ABC</span><span id="low" class="requirement">abc</span><span id="spec" class="requirement">#@!</span><span id="len" class="requirement">8+</span></div>
                     </div>
-                    <div class="md:col-span-3 flex items-start gap-3 px-2">
-                        <input type="checkbox" id="termsCheck" required class="mt-1">
-                        <label for="termsCheck" class="text-xs text-slate-500 leading-tight">I agree to the <button type="button" onclick="toggleModal('terms', true)" class="text-blue-600 font-bold underline">Terms & Conditions</button></label>
-                    </div>
                     <button type="submit" id="regBtn" class="md:col-span-3 w-full bg-blue-700 text-white p-4 rounded-3xl font-black opacity-50" disabled>Create Account</button>
                 </form>
-                <p class="text-center mt-6 text-sm font-bold">Have an account? <button onclick="toggleAuth('login')" class="text-blue-600 underline">Sign In</button></p>
             </div>
         </div>
     </div>
@@ -91,7 +86,6 @@
             <nav class="space-y-2 flex-1">
                 <div onclick="showPage('job-board')" class="nav-link active" id="nav-job-board"><i class="fas fa-th-large"></i> Job Board</div>
                 <div onclick="showPage('post-gig')" class="nav-link" id="nav-post-gig"><i class="fas fa-plus-circle"></i> Post a Gig</div>
-                <div onclick="showPage('manage')" class="nav-link" id="nav-manage"><i class="fas fa-list-ul"></i> Manage Gigs</div>
                 <div onclick="showPage('profile')" class="nav-link" id="nav-profile"><i class="fas fa-user-edit"></i> My Profile</div>
                 <div onclick="showPage('settings')" class="nav-link" id="nav-settings"><i class="fas fa-adjust"></i> Appearance</div>
             </nav>
@@ -101,30 +95,48 @@
         <main class="flex-1 flex flex-col h-full overflow-hidden">
             <header class="p-4 glass-card border-b flex justify-between items-center px-6">
                 <button onclick="toggleSidebar()" class="md:hidden p-2"><i class="fas fa-bars text-xl"></i></button>
-                <input type="text" id="gigSearch" onkeyup="searchGigs()" placeholder="Search available student gigs..." class="w-full max-w-md mx-4 pl-4 py-3 rounded-2xl search-bar outline-none">
+                <input type="text" id="gigSearch" onkeyup="searchGigs()" placeholder="Search student gigs..." class="w-full max-w-md mx-4 pl-4 py-3 rounded-2xl search-bar outline-none">
             </header>
-            <div id="content-pages" class="flex-1 overflow-y-auto p-6">
+
+            <div id="content-pages" class="flex-1 overflow-y-auto p-6 md:p-10">
                 <section id="page-job-board">
                     <h2 class="text-3xl font-black">Job Board</h2>
                     <div id="gig-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8"></div>
                 </section>
+
                 <section id="page-post-gig" class="hidden max-w-2xl mx-auto">
                     <h2 class="text-3xl font-black text-center">Hire a Student</h2>
                     <form onsubmit="handlePost(event)" class="space-y-4 glass-card p-8 rounded-[2.5rem] mt-6">
                         <input type="text" id="p-title" placeholder="Gig Title" class="custom-input" required>
                         <input type="number" id="p-price" placeholder="Budget (₦)" class="custom-input" required>
-                        <input type="text" id="p-loc" placeholder="Location" class="custom-input" required>
+                        <input type="text" id="p-loc" placeholder="Location (e.g. Uniport Library)" class="custom-input" required>
                         <textarea id="p-desc" placeholder="Gig Description" class="custom-input h-32" required></textarea>
                         <button type="submit" class="w-full bg-blue-600 text-white p-5 rounded-2xl font-black">Post Gig Now</button>
                     </form>
                 </section>
-                <section id="page-profile" class="hidden">
-                    <h2 class="text-3xl font-black mb-8 text-center">My Profile</h2>
-                    <div class="glass-card p-8 rounded-[2.5rem] text-center">Profile customization coming soon.</div>
+
+                <section id="page-profile" class="hidden max-w-3xl mx-auto">
+                    <h2 class="text-3xl font-black mb-8">My Profile</h2>
+                    <div class="glass-card p-8 rounded-[2.5rem] space-y-6">
+                        <div class="flex flex-col items-center gap-4 mb-6">
+                            <div class="relative w-32 h-32">
+                                <img id="profile-preview" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=128" class="w-full h-full rounded-full object-cover">
+                                <label class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer"><i class="fas fa-camera"></i><input type="file" class="hidden" accept="image/*" onchange="previewImage(event)"></label>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="text-xs font-black ml-2">FULL NAME</label><input type="text" class="custom-input" placeholder="Emereje Roland"></div>
+                            <div><label class="text-xs font-black ml-2">UNIVERSITY</label><input type="text" class="custom-input" placeholder="University of Port Harcourt"></div>
+                            <div><label class="text-xs font-black ml-2">FACULTY</label><input type="text" class="custom-input" placeholder="Science"></div>
+                            <div><label class="text-xs font-black ml-2">DEPARTMENT</label><input type="text" class="custom-input" placeholder="Computer Science"></div>
+                        </div>
+                        <button onclick="alert('Profile Saved!')" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black">Update Profile</button>
+                    </div>
                 </section>
+
                 <section id="page-settings" class="hidden text-center">
                     <h2 class="text-3xl font-black mb-8">Appearance</h2>
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-3 gap-4 max-w-md mx-auto">
                         <button onclick="updateTheme('light')" class="theme-btn"><i class="fas fa-sun"></i> Light</button>
                         <button onclick="updateTheme('dark')" class="theme-btn"><i class="fas fa-moon"></i> Dark</button>
                         <button onclick="updateTheme('system')" class="theme-btn"><i class="fas fa-desktop"></i> System</button>
@@ -137,20 +149,13 @@
     <div id="forgot-modal" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-[2.5rem] p-8">
             <h2 class="text-2xl font-black mb-4">Reset Password</h2>
-            <input type="email" placeholder="Uni Email" class="custom-input mb-4">
+            <input type="email" placeholder="Email" class="custom-input mb-4">
             <button onclick="toggleModal('forgot', false)" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black">Send Link</button>
-        </div>
-    </div>
-    <div id="terms-modal" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[2.5rem] p-10">
-            <h3 class="font-black text-2xl mb-6">Terms & Conditions</h3>
-            <div class="text-sm text-slate-500">Student Marketplace. No fraud. Professional behavior only.</div>
-            <button onclick="toggleModal('terms', false)" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black mt-6">Agree</button>
         </div>
     </div>
 
     <script>
-        // --- YOUR CONNECTED SUPABASE ---
+        // --- SUPABASE CONFIG ---
         const supabaseUrl = 'https://ybfamugobqgkdbezkgyw.supabase.co'; 
         const supabaseKey = 'sb_publishable_xZtl0fMCuBuMAx0PoPQ_GA_ybiiKnIi'; 
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
@@ -158,11 +163,13 @@
         let localGigs = [];
         let timerInterval;
 
+        // FETCH GIGS
         async function fetchGigs() {
             const { data, error } = await _supabase.from('gigs').select('*').order('id', { ascending: false });
             if (!error) { localGigs = data; renderGigs(localGigs); }
         }
 
+        // POST GIG
         async function handlePost(e) {
             e.preventDefault();
             const gig = { 
@@ -172,8 +179,8 @@
                 description: document.getElementById('p-desc').value 
             };
             const { error } = await _supabase.from('gigs').insert([gig]);
-            if (error) alert("Supabase says: " + error.message);
-            else { alert("Gig Live!"); fetchGigs(); showPage('job-board'); e.target.reset(); }
+            if (error) alert("Error: " + error.message);
+            else { alert("Gig Posted!"); fetchGigs(); showPage('job-board'); e.target.reset(); }
         }
 
         function renderGigs(list) {
@@ -189,11 +196,49 @@
             `).join('');
         }
 
+        // NAVIGATION & UI
         function showDashboard() {
             document.getElementById('auth-container').classList.add('hidden');
             document.getElementById('verify-screen').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             fetchGigs();
+        }
+
+        function showPage(p) {
+            document.querySelectorAll('#content-pages section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(`page-${p}`).classList.remove('hidden');
+            document.getElementById(`nav-${p}`).classList.add('active');
+            if(window.innerWidth < 768) toggleSidebar();
+        }
+
+        function toggleAuth(v) { document.getElementById('login-view').classList.toggle('hidden', v === 'reg'); document.getElementById('reg-view').classList.toggle('hidden', v === 'login'); }
+        function toggleModal(id, show) { document.getElementById(`${id}-modal`).classList.toggle('hidden', !show); }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sidebar-closed'); }
+        function togglePass(id) { const x = document.getElementById(id); x.type = x.type === "password" ? "text" : "password"; }
+        function updateTheme(m) { localStorage.setItem('theme', m); applyTheme(); }
+        
+        function applyTheme() {
+            const m = localStorage.getItem('theme') || 'light';
+            const dark = m === 'dark' || (m === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.body.classList.toggle('dark-mode', dark);
+        }
+
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = () => document.getElementById('profile-preview').src = reader.result;
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function validatePass(v) {
+            const met = /[A-Z]/.test(v) && /[a-z]/.test(v) && /[!@#$%]/.test(v) && v.length >= 8;
+            const btn = document.getElementById('regBtn');
+            btn.disabled = !met; btn.style.opacity = met ? "1" : "0.5";
+        }
+
+        function searchGigs() {
+            const val = document.getElementById('gigSearch').value.toLowerCase();
+            renderGigs(localGigs.filter(g => g.title.toLowerCase().includes(val) || g.description.toLowerCase().includes(val)));
         }
 
         function startResendTimer() {
@@ -214,40 +259,12 @@
             startResendTimer(); 
         }
 
-        function showPage(p) {
-            document.querySelectorAll('#content-pages section').forEach(s => s.classList.add('hidden'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            document.getElementById(`page-${p}`).classList.remove('hidden');
-            document.getElementById(`nav-${p}`).classList.add('active');
-        }
-
-        function toggleAuth(v) { document.getElementById('login-view').classList.toggle('hidden', v === 'reg'); document.getElementById('reg-view').classList.toggle('hidden', v === 'login'); }
-        function toggleModal(id, show) { document.getElementById(`${id}-modal`).classList.toggle('hidden', !show); }
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sidebar-closed'); }
-        function togglePass(id) { const x = document.getElementById(id); x.type = x.type === "password" ? "text" : "password"; }
-        function updateTheme(m) { localStorage.setItem('theme', m); applyTheme(); }
-        function applyTheme() {
-            const m = localStorage.getItem('theme') || 'light';
-            const dark = m === 'dark' || (m === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            document.body.classList.toggle('dark-mode', dark);
-        }
-
-        function validatePass(v) {
-            const met = /[A-Z]/.test(v) && /[a-z]/.test(v) && /[!@#$%]/.test(v) && v.length >= 8;
-            const btn = document.getElementById('regBtn');
-            btn.disabled = !met; btn.style.opacity = met ? "1" : "0.5";
-        }
-
-        function searchGigs() {
-            const val = document.getElementById('gigSearch').value.toLowerCase();
-            renderGigs(localGigs.filter(g => g.title.toLowerCase().includes(val) || g.description.toLowerCase().includes(val)));
-        }
-
         window.onload = () => { 
             applyTheme(); 
             if(document.querySelector("#phone")) window.intlTelInput(document.querySelector("#phone"), { initialCountry: "ng" }); 
         };
     </script>
 </body>
-    </html>
-    
+</html>
+                                                                                              </html>
+                                                              
