@@ -8,154 +8,205 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
     <style>
-        :root { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --border: #e2e8f0; --input-bg: #ffffff; }
-        .dark-mode { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --border: #334155; --input-bg: #334155; }
-        body { background-color: var(--bg); color: var(--text); transition: all 0.3s ease; }
-        .glass-card { background: var(--card); border: 1px solid var(--border); }
-        .custom-input { background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 1.25rem; padding: 1rem; width: 100%; outline: none; color: var(--text); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --text: #0f172a; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; }
+        
+        .glass-card { background: var(--card); border: 1px solid rgba(226, 232, 240, 0.8); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); }
+        .input-field { background: #f1f5f9; border: 2px solid transparent; border-radius: 1.25rem; padding: 1rem 1.5rem; width: 100%; outline: none; transition: 0.3s; }
+        .input-field:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+        
+        .btn-primary { background: var(--primary); color: white; padding: 1rem; border-radius: 1.25rem; font-weight: 800; transition: 0.3s; width: 100%; text-align: center; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
+        
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 0.8rem 1.5rem; border-radius: 1rem; color: #64748b; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .nav-link.active { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
+        
         .hidden { display: none !important; }
-        .requirement { font-size: 10px; font-weight: 900; color: #cbd5e1; }
-        .requirement.met { color: #22c55e; }
-        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-        .nav-link:hover, .nav-link.active { background: #3b82f620; color: #3b82f6; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="font-sans min-h-screen">
+<body>
 
-    <div id="auth-container" class="flex items-center justify-center min-h-screen p-4">
-        <div class="w-full max-w-4xl glass-card rounded-[3rem] shadow-2xl p-8 md:p-12">
-            <div class="text-center mb-6">
-                <h1 class="text-4xl font-black text-blue-600">GigPort.</h1>
-                <p class="text-slate-400 font-bold text-sm">Professional Student Marketplace</p>
+    <div id="auth-section" class="min-h-screen flex items-center justify-center p-6">
+        <div class="w-full max-w-md glass-card rounded-[3rem] p-10 md:p-14">
+            <div class="text-center mb-10">
+                <h1 class="text-5xl font-black text-blue-600 tracking-tighter mb-2">GigPort.</h1>
+                <p class="text-slate-400 font-bold text-sm uppercase tracking-widest">Student Economy</p>
             </div>
 
-            <div id="login-view">
-                <form id="loginForm" class="max-w-md mx-auto space-y-4">
-                    <input type="email" id="loginEmail" placeholder="Email" class="custom-input" required>
-                    <input type="password" id="loginPass" placeholder="Password" class="custom-input" required>
-                    <button type="submit" class="w-full bg-blue-600 text-white p-4 rounded-full font-bold">Sign In</button>
+            <div id="login-ui">
+                <form id="loginForm" class="space-y-4">
+                    <input type="email" id="l-email" placeholder="Uni Email" class="input-field" required>
+                    <input type="password" id="l-pass" placeholder="Password" class="input-field" required>
+                    <button type="submit" class="btn-primary mt-4">Sign In</button>
                 </form>
-                <p class="text-center mt-8 text-sm font-bold">New? <button onclick="toggleAuth('reg')" class="text-blue-600 underline">Create Account</button></p>
+                <p class="text-center mt-8 font-semibold text-sm">Need an account? <button onclick="toggleAuth(true)" class="text-blue-600">Register</button></p>
             </div>
 
-            <div id="reg-view" class="hidden">
-                <form id="regForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <input type="text" id="r-fullname" placeholder="Full Name" class="custom-input" required>
-                    <input type="text" id="r-nick" placeholder="Nickname" class="custom-input" required>
-                    <input type="email" id="r-email" placeholder="Email" class="custom-input" required>
-                    <input type="tel" id="phone" class="custom-input" required>
-                    <input type="text" id="r-uni" placeholder="University" class="custom-input" required>
-                    <input type="text" id="r-state" placeholder="State" class="custom-input" required>
-                    <div class="md:col-span-3">
-                        <input type="password" id="regPass" oninput="validatePass(this.value)" placeholder="Strong Password" class="custom-input" required>
-                        <div class="flex gap-3 mt-2 px-2">
-                            <span id="up" class="requirement">ABC</span> <span id="low" class="requirement">abc</span>
-                            <span id="spec" class="requirement">#@!</span> <span id="len" class="requirement">8+</span>
-                        </div>
+            <div id="reg-ui" class="hidden">
+                <form id="regForm" class="space-y-4">
+                    <input type="text" id="r-name" placeholder="Full Name" class="input-field" required>
+                    <input type="text" id="r-nick" placeholder="Username (@nickname)" class="input-field" required>
+                    <input type="email" id="r-email" placeholder="Email Address" class="input-field" required>
+                    <input type="password" id="r-pass" placeholder="Create Password" class="input-field" required>
+                    
+                    <div class="flex items-center gap-3 px-2">
+                        <input type="checkbox" id="t-check" required class="w-4 h-4 rounded">
+                        <label class="text-[10px] text-slate-500 font-bold uppercase">Accept <span class="text-blue-600 underline cursor-pointer" onclick="toggleModal('terms', true)">Terms</span></label>
                     </div>
-                    <button type="submit" id="regBtn" class="md:col-span-3 w-full bg-blue-700 text-white p-4 rounded-3xl font-black opacity-50" disabled>Create Account</button>
+                    <button type="submit" class="btn-primary">Create Account</button>
                 </form>
+                <p class="text-center mt-6 font-semibold text-sm">Already a member? <button onclick="toggleAuth(false)" class="text-blue-600">Login</button></p>
             </div>
         </div>
     </div>
 
-    <div id="dashboard" class="hidden fixed inset-0 flex overflow-hidden">
-        <aside class="w-72 h-full glass-card border-r p-6">
-            <h2 class="text-2xl font-black text-blue-600 mb-8">GigPort.</h2>
-            <nav class="space-y-2">
-                <div class="nav-link active"><i class="fas fa-th-large"></i> Job Board</div>
-                <div onclick="signOut()" class="nav-link text-red-500 font-bold mt-10"><i class="fas fa-power-off"></i> Logout</div>
+    <div id="dashboard-section" class="hidden fixed inset-0 flex">
+        <aside class="w-72 glass-card border-r h-full p-8 flex flex-col">
+            <h2 class="text-2xl font-black text-blue-600 mb-12">GigPort.</h2>
+            <nav class="space-y-2 flex-1">
+                <div class="nav-link active" onclick="showPage('feed')"><i class="fas fa-grid-2"></i> Job Board</div>
+                <div class="nav-link" onclick="showPage('post')"><i class="fas fa-plus-circle"></i> Post a Gig</div>
+                <div class="nav-link" onclick="showPage('profile')"><i class="fas fa-user-circle"></i> My Profile</div>
             </nav>
+            <div class="pt-6 border-t">
+                <button onclick="handleLogout()" class="nav-link text-red-500 w-full"><i class="fas fa-power-off"></i> Logout</button>
+            </div>
         </aside>
-        <main class="flex-1 p-10 overflow-y-auto">
-            <header class="flex justify-between items-center mb-10">
-                <h2 class="text-3xl font-black">Student Job Board</h2>
-                <div id="user-badge" class="font-bold text-blue-600"></div>
-            </header>
-            <div id="gig-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+
+        <main class="flex-1 p-12 overflow-y-auto">
+            <div id="page-feed">
+                <div class="flex justify-between items-end mb-10">
+                    <div>
+                        <h2 class="text-4xl font-black mb-2">Marketplace</h2>
+                        <p class="text-slate-400 font-bold">Find student services in UniPort</p>
+                    </div>
+                    <div id="user-display" class="bg-blue-600 text-white px-6 py-2 rounded-full font-black text-sm"></div>
+                </div>
+                <div id="gig-container" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    </div>
+            </div>
+
+            <div id="page-post" class="hidden max-w-2xl mx-auto">
+                <h2 class="text-4xl font-black mb-10">Post a Job</h2>
+                <form id="gigPostForm" class="glass-card p-10 rounded-[3rem] space-y-6">
+                    <input type="text" id="g-title" placeholder="Job Title (e.g. Laundry, Tutoring)" class="input-field" required>
+                    <input type="number" id="g-price" placeholder="Budget (₦)" class="input-field" required>
+                    <textarea id="g-desc" placeholder="Describe the service needed..." class="input-field h-40" required></textarea>
+                    <button type="submit" class="btn-primary">List Gig Online</button>
+                </form>
+            </div>
         </main>
     </div>
 
+    <div id="terms-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
+        <div class="bg-white rounded-[3rem] p-10 max-w-md w-full shadow-2xl">
+            <h3 class="text-2xl font-black mb-4">Terms & Conditions</h3>
+            <div class="text-sm text-slate-500 space-y-4 mb-8">
+                <p>1. <strong>Strictly for Students:</strong> This app is for UniPort student connections only.</p>
+                <p>2. <strong>Integrity:</strong> No exam malpractice or assignment fraud allowed.</p>
+                <p>3. <strong>Payments:</strong> Pay fellow students only after the job is completed safely.</p>
+            </div>
+            <button onclick="toggleModal('terms', false)" class="btn-primary">I Accept</button>
+        </div>
+    </div>
+
     <script>
+        // --- DATABASE INIT ---
         const SB_URL = 'https://ybfamugobqgkdbezkgyw.supabase.co';
         const SB_KEY = 'sb_publishable_xZtl0fMCuBuMAx0PoPQ_GA_ybiiKnIi';
         const _db = supabase.createClient(SB_URL, SB_KEY);
-        let currentUser = null;
+        let activeUser = null;
 
-        // --- AUTOMATIC REDIRECT LOGIC ---
+        // --- AUTH FUNCTIONS ---
         document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
-            const email = document.getElementById('r-email').value;
-            const password = document.getElementById('regPass').value;
-
-            // Step 1: Sign Up
-            const { data, error } = await _db.auth.signUp({ 
-                email, password, 
-                options: { data: { full_name: document.getElementById('r-fullname').value, nickname: document.getElementById('r-nick').value } }
+            const { data, error } = await _db.auth.signUp({
+                email: document.getElementById('r-email').value,
+                password: document.getElementById('r-pass').value,
+                options: { data: { full_name: document.getElementById('r-name').value, nickname: document.getElementById('r-nick').value } }
             });
-
             if (error) return alert(error.message);
-
-            if (data.user) {
-                // Step 2: Create Profile
-                await _db.from('profiles').insert([{ 
-                    id: data.user.id, 
-                    full_name: document.getElementById('r-fullname').value, 
-                    nickname: document.getElementById('r-nick').value,
-                    university: document.getElementById('r-uni').value
-                }]);
-                
-                // Step 3: MOVE TO DASHBOARD IMMEDIATELY
-                currentUser = data.user;
-                showDashboard();
-            }
+            
+            // Auto-profile creation and dashboard jump
+            await _db.from('profiles').insert([{ id: data.user.id, nickname: document.getElementById('r-nick').value, full_name: document.getElementById('r-name').value }]);
+            activeUser = data.user;
+            enterApp();
         };
 
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
-            const { data, error } = await _db.auth.signInWithPassword({ 
-                email: document.getElementById('loginEmail').value, 
-                password: document.getElementById('loginPass').value 
+            const { data, error } = await _db.auth.signInWithPassword({
+                email: document.getElementById('l-email').value,
+                password: document.getElementById('l-pass').value
             });
             if (error) alert(error.message);
-            else { currentUser = data.user; showDashboard(); }
+            else { activeUser = data.user; enterApp(); }
         };
 
-        function showDashboard() {
-            document.getElementById('auth-container').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.getElementById('user-badge').innerText = `Welcome, ${currentUser.user_metadata.nickname || 'Student'}`;
-            renderGigs();
+        function enterApp() {
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('hidden');
+            document.getElementById('user-display').innerText = `@${activeUser.user_metadata.nickname}`;
+            loadMarketplace();
         }
 
-        async function renderGigs() {
-            const { data } = await _db.from('gigs').select('*').limit(10);
+        // --- GIG FUNCTIONS ---
+        async function loadMarketplace() {
+            const { data } = await _db.from('gigs').select('*, profiles(nickname)').order('created_at', { ascending: false });
             if (data) {
-                document.getElementById('gig-list').innerHTML = data.map(g => `
-                    <div class="glass-card p-6 rounded-[2rem] border-l-4 border-l-blue-500">
-                        <h3 class="font-black text-xl text-blue-600">${g.title}</h3>
-                        <p class="text-sm text-slate-500 my-2">${g.description}</p>
-                        <p class="font-bold text-green-600">₦${g.price}</p>
+                document.getElementById('gig-container').innerHTML = data.map(g => `
+                    <div class="glass-card p-8 rounded-[2.5rem] border-t-8 border-blue-600">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-xl font-black text-slate-800">${g.title}</h4>
+                            <span class="text-green-600 font-black">₦${g.price}</span>
+                        </div>
+                        <p class="text-slate-500 text-sm mb-6 leading-relaxed">${g.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-black uppercase text-slate-400">By @${g.profiles?.nickname || 'Student'}</span>
+                            <button class="bg-slate-100 px-6 py-2 rounded-xl text-xs font-black hover:bg-blue-600 hover:text-white transition">Apply</button>
+                        </div>
                     </div>
                 `).join('');
             }
         }
 
-        async function signOut() { await _db.auth.signOut(); location.reload(); }
-        function toggleAuth(v) { document.getElementById('login-view').classList.toggle('hidden', v === 'reg'); document.getElementById('reg-view').classList.toggle('hidden', v === 'login'); }
-        function validatePass(v) {
-            const up = /[A-Z]/.test(v), low = /[a-z]/.test(v), spec = /[!@#$%]/.test(v), len = v.length >= 8;
-            document.getElementById('up').className = up ? 'requirement met' : 'requirement';
-            document.getElementById('low').className = low ? 'requirement met' : 'requirement';
-            document.getElementById('spec').className = spec ? 'requirement met' : 'requirement';
-            document.getElementById('len').className = len ? 'requirement met' : 'requirement';
-            const btn = document.getElementById('regBtn'); btn.disabled = !(up && low && spec && len); btn.style.opacity = btn.disabled ? "0.5" : "1";
+        document.getElementById('gigPostForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const { error } = await _db.from('gigs').insert([{
+                user_id: activeUser.id,
+                title: document.getElementById('g-title').value,
+                price: document.getElementById('g-price').value,
+                description: document.getElementById('g-desc').value
+            }]);
+            if (error) alert(error.message);
+            else { showPage('feed'); loadMarketplace(); }
+        };
+
+        // --- UI UTILS ---
+        function toggleAuth(isReg) {
+            document.getElementById('login-ui').classList.toggle('hidden', isReg);
+            document.getElementById('reg-ui').classList.toggle('hidden', !isReg);
         }
-        window.onload = () => { if(document.querySelector("#phone")) window.intlTelInput(document.querySelector("#phone"), { initialCountry: "ng" }); };
+        function toggleModal(id, show) { document.getElementById(`${id}-modal`).classList.toggle('hidden', !show); }
+        function showPage(p) {
+            document.getElementById('page-feed').classList.toggle('hidden', p !== 'feed');
+            document.getElementById('page-post').classList.toggle('hidden', p !== 'post');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+        async function handleLogout() { await _db.auth.signOut(); location.reload(); }
+        
+        window.onload = async () => {
+            const { data: { session } } = await _db.auth.getSession();
+            if (session) { activeUser = session.user; enterApp(); }
+        };
     </script>
 </body>
-</html>
+                    </html>
+    
