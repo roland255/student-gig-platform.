@@ -57,7 +57,7 @@
             </div>
 
             <div id="reg-view" class="hidden">
-                <form onsubmit="event.preventDefault(); showVerify();" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form onsubmit="event.preventDefault(); showDashboard();" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input type="text" placeholder="Full Name" class="custom-input" required>
                     <input type="text" placeholder="Matric Number" class="custom-input" required>
                     <input type="email" placeholder="Student Email" class="custom-input" required>
@@ -98,17 +98,18 @@
             <div id="content-pages" class="flex-1 overflow-y-auto p-6 md:p-10 bg-slate-50 dark:bg-slate-950">
                 <section id="page-job-board">
                     <h2 class="text-3xl font-black mb-6">Job Board</h2>
-                    <div id="gig-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
+                    <div id="gig-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        </div>
                 </section>
 
                 <section id="page-post-gig" class="hidden max-w-2xl mx-auto">
                     <h2 class="text-3xl font-black text-center mb-6">Hire a Student</h2>
-                    <form onsubmit="handlePost(event)" class="space-y-4 glass-card p-8 rounded-[2.5rem]">
+                    <form id="postGigForm" onsubmit="handlePost(event)" class="space-y-4 glass-card p-8 rounded-[2.5rem]">
                         <input type="text" id="p-title" placeholder="Gig Title" class="custom-input" required>
                         <input type="number" id="p-price" placeholder="Budget (₦)" class="custom-input" required>
                         <input type="text" id="p-loc" placeholder="Location" class="custom-input" required>
                         <textarea id="p-desc" placeholder="Gig Description" class="custom-input h-32" required></textarea>
-                        <button type="submit" class="w-full bg-blue-600 text-white p-5 rounded-2xl font-black">Post Gig Now</button>
+                        <button type="submit" class="w-full bg-blue-600 text-white p-5 rounded-2xl font-black shadow-lg">Post Gig Now</button>
                     </form>
                 </section>
 
@@ -159,9 +160,9 @@
         <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[2.5rem] p-10">
             <h3 class="font-black text-2xl mb-6">Terms & Conditions</h3>
             <div class="text-sm text-slate-500 h-64 overflow-y-auto space-y-4 pr-2">
-                <p>1. <strong>Academic Integrity:</strong> This platform is for legitimate student gigs (tutoring, delivery, etc.). Do not use it for academic fraud or exam malpractice.</p>
-                <p>2. <strong>Verification:</strong> Only students with valid university credentials are permitted to use this platform.</p>
-                <p>3. <strong>Safety:</strong> Always meet in public university locations (Library, Choba Gate, etc.) for physical gig completions.</p>
+                <p>1. <strong>Academic Integrity:</strong> Only legitimate student gigs (tutoring, delivery, etc.). No academic fraud.</p>
+                <p>2. <strong>Verification:</strong> Must be a UniPort student.</p>
+                <p>3. <strong>Safety:</strong> Meet in public campus locations.</p>
             </div>
             <button onclick="toggleModal('terms', false)" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black mt-6">I Understand</button>
         </div>
@@ -176,31 +177,54 @@
 
         async function fetchGigs() {
             const { data, error } = await _supabase.from('gigs').select('*').order('id', { ascending: false });
-            if (!error) { localGigs = data; renderGigs(localGigs); }
+            if (!error) { 
+                localGigs = data; 
+                renderGigs(localGigs); 
+            }
         }
 
         async function handlePost(e) {
             e.preventDefault();
             const gig = { 
                 title: document.getElementById('p-title').value, 
-                price: document.getElementById('p-price').value, 
+                price: parseInt(document.getElementById('p-price').value), 
                 location: document.getElementById('p-loc').value, 
                 description: document.getElementById('p-desc').value 
             };
+
             const { error } = await _supabase.from('gigs').insert([gig]);
-            if (error) alert(error.message);
-            else { alert("Gig Posted!"); fetchGigs(); showPage('job-board'); e.target.reset(); }
+            
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
+                alert("Gig Posted Successfully!");
+                // Clear form
+                e.target.reset();
+                // Refresh data
+                await fetchGigs();
+                // Switch view to Job Board automatically
+                showPage('job-board');
+            }
         }
 
         function renderGigs(list) {
-            document.getElementById('gig-list').innerHTML = list.map(g => `
-                <div class="glass-card p-6 rounded-[2.5rem] border-l-8 border-l-blue-500 shadow-sm">
+            const listElement = document.getElementById('gig-list');
+            if (list.length === 0) {
+                listElement.innerHTML = `<div class="col-span-full text-center p-10 font-bold text-slate-400">No gigs available yet.</div>`;
+                return;
+            }
+
+            listElement.innerHTML = list.map(g => `
+                <div class="glass-card p-6 rounded-[2.5rem] border-l-8 border-l-blue-500 shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex justify-between items-start mb-4">
-                        <div><h3 class="font-black text-xl text-blue-600">${g.title}</h3><p class="text-xs font-bold text-slate-400 uppercase"><i class="fas fa-map-marker-alt"></i> ${g.location}</p></div>
+                        <div>
+                            <h3 class="font-black text-xl text-blue-600">${g.title}</h3>
+                            <p class="text-xs font-bold text-slate-400 uppercase"><i class="fas fa-map-marker-alt"></i> ${g.location}</p>
+                        </div>
                         <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-black">₦${g.price}</span>
                     </div>
                     <p class="text-sm text-slate-500 mb-6 line-clamp-2">${g.description}</p>
-                    <button class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl">Claim Gig</button>
+                    <button class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl active:scale-95 transition-transform">Claim Gig</button>
                 </div>
             `).join('');
         }
@@ -217,6 +241,7 @@
             document.getElementById(`page-${p}`).classList.remove('hidden');
             document.getElementById(`nav-${p}`).classList.add('active');
             if(window.innerWidth < 768) toggleSidebar();
+            if(p === 'job-board') fetchGigs(); // Ensure refresh when clicking nav
         }
 
         function toggleAuth(v) { document.getElementById('login-view').classList.toggle('hidden', v === 'reg'); document.getElementById('reg-view').classList.toggle('hidden', v === 'login'); }
@@ -247,4 +272,5 @@
         };
     </script>
 </body>
-</html>
+                    </html>
+            
