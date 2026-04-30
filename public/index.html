@@ -9,35 +9,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-      const supabaseUrl = 'https://your-project.supabase.co';
-      const supabaseKey = 'your-key'; 
-      const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
-    </script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
     <style>
         :root { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --border: #e2e8f0; --input-bg: #ffffff; --search-text: #1e293b; --accent: #3b82f6; }
         .dark-mode { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --border: #334155; --input-bg: #334155; --search-text: #ffffff; --accent: #60a5fa; }
-        
         body { background-color: var(--bg); color: var(--text); transition: background 0.4s ease, color 0.4s ease; }
         .glass-card { background: var(--card); border: 1px solid var(--border); }
         .custom-input { background-color: var(--input-bg); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.75rem 1rem; width: 100%; outline: none; color: var(--text); }
         .custom-input:focus { border-color: var(--accent); }
-        
         .search-bar { background-color: var(--input-bg); border: 2px solid #3b82f630; color: var(--search-text); }
         .hidden { display: none !important; }
         #sidebar { transition: transform 0.3s ease; z-index: 100; }
         .sidebar-closed { transform: translateX(-100%); }
-        
         .requirement { font-size: 10px; font-weight: 900; color: #cbd5e1; }
         .requirement.met { color: #22c55e; }
         .otp-input { width: 2.5rem; height: 3rem; text-align: center; font-weight: bold; border: 2px solid var(--border); border-radius: 10px; background: var(--card); color: var(--text); }
-        
         .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-weight: 600; }
         .nav-link:hover, .nav-link.active { background: #3b82f620; color: var(--accent); }
-
         .theme-btn { padding: 1rem; border-radius: 1rem; border: 2px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.2s; cursor: pointer; }
         .theme-btn.active { border-color: var(--accent); background: #3b82f610; }
     </style>
@@ -50,7 +39,6 @@
                 <h1 class="text-4xl font-black text-blue-600">GigPort.</h1>
                 <p class="text-slate-400 font-bold text-sm">Professional Student Marketplace</p>
             </div>
-
             <div id="login-view">
                 <form onsubmit="event.preventDefault(); showDashboard();" class="max-w-md mx-auto space-y-4">
                     <input type="text" placeholder="Email or Nickname" class="custom-input" required>
@@ -65,7 +53,6 @@
                 </form>
                 <p class="text-center mt-8 text-sm font-bold">New? <button onclick="toggleAuth('reg')" class="text-blue-600 underline">Create Account</button></p>
             </div>
-
             <div id="reg-view" class="hidden">
                 <form onsubmit="event.preventDefault(); showVerify();" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <input type="text" placeholder="Full Name" class="custom-input" required>
@@ -80,11 +67,9 @@
                     </div>
                     <div class="md:col-span-3 flex items-start gap-3 px-2">
                         <input type="checkbox" id="termsCheck" required class="mt-1">
-                        <label for="termsCheck" class="text-xs text-slate-500 leading-tight">
-                            I agree to the <button type="button" onclick="toggleModal('terms', true)" class="text-blue-600 font-bold underline">Terms & Conditions</button>
-                        </label>
+                        <label for="termsCheck" class="text-xs text-slate-500 leading-tight">I agree to the <button type="button" onclick="toggleModal('terms', true)" class="text-blue-600 font-bold underline">Terms & Conditions</button></label>
                     </div>
-                    <button type="submit" id="regBtn" class="md:col-span-3 w-full bg-blue-700 text-white p-4 rounded-3xl font-black opacity-50 transition-all" disabled>Create Account</button>
+                    <button type="submit" id="regBtn" class="md:col-span-3 w-full bg-blue-700 text-white p-4 rounded-3xl font-black opacity-50" disabled>Create Account</button>
                 </form>
                 <p class="text-center mt-6 text-sm font-bold">Have an account? <button onclick="toggleAuth('login')" class="text-blue-600 underline">Sign In</button></p>
             </div>
@@ -93,22 +78,16 @@
 
     <div id="verify-screen" class="hidden fixed inset-0 bg-white dark:bg-slate-900 z-[200] flex flex-col items-center justify-center p-6 text-center">
         <h2 class="text-3xl font-black mb-2">Verify Email</h2>
-        <p class="text-slate-400 mb-8 max-w-xs text-sm">Enter the 6-digit code sent to your inbox.</p>
         <div class="flex gap-2 mb-8">
             <input type="text" maxlength="1" class="otp-input"><input type="text" maxlength="1" class="otp-input"><input type="text" maxlength="1" class="otp-input"><input type="text" maxlength="1" class="otp-input"><input type="text" maxlength="1" class="otp-input"><input type="text" maxlength="1" class="otp-input">
         </div>
-        <button onclick="showDashboard()" class="bg-blue-600 text-white px-10 py-3 rounded-full font-bold mb-4 shadow-lg">Verify Account</button>
-        <p class="text-sm font-bold text-slate-400">
-            Didn't get a code? <button id="resend-btn" onclick="startResendTimer()" class="text-blue-600 disabled:opacity-50" disabled>Resend in <span id="timer">59</span>s</button>
-        </p>
+        <button onclick="showDashboard()" class="bg-blue-600 text-white px-10 py-3 rounded-full font-bold mb-4">Verify Account</button>
+        <p class="text-sm font-bold text-slate-400">Didn't get a code? <button id="resend-btn" onclick="startResendTimer()" class="text-blue-600" disabled>Resend in <span id="timer">59</span>s</button></p>
     </div>
 
     <div id="dashboard" class="hidden fixed inset-0 flex overflow-hidden">
         <aside id="sidebar" class="fixed md:relative w-72 h-full glass-card border-r p-6 sidebar-closed md:sidebar-open">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-black text-blue-600">GigPort.</h2>
-                <button onclick="toggleSidebar()" class="md:hidden"><i class="fas fa-times"></i></button>
-            </div>
+            <h2 class="text-2xl font-black text-blue-600 mb-8">GigPort.</h2>
             <nav class="space-y-2 flex-1">
                 <div onclick="showPage('job-board')" class="nav-link active" id="nav-job-board"><i class="fas fa-th-large"></i> Job Board</div>
                 <div onclick="showPage('post-gig')" class="nav-link" id="nav-post-gig"><i class="fas fa-plus-circle"></i> Post a Gig</div>
@@ -122,183 +101,117 @@
         <main class="flex-1 flex flex-col h-full overflow-hidden">
             <header class="p-4 glass-card border-b flex justify-between items-center px-6">
                 <button onclick="toggleSidebar()" class="md:hidden p-2"><i class="fas fa-bars text-xl"></i></button>
-                <div class="relative w-full max-w-md mx-4">
-                    <i class="fas fa-search absolute left-4 top-3.5 text-blue-500"></i>
-                    <input type="text" id="gigSearch" onkeyup="searchGigs()" placeholder="Search available student gigs..." class="w-full pl-12 pr-4 py-3 rounded-2xl search-bar outline-none text-sm shadow-sm">
-                </div>
+                <input type="text" id="gigSearch" onkeyup="searchGigs()" placeholder="Search available student gigs..." class="w-full max-w-md mx-4 pl-4 py-3 rounded-2xl search-bar outline-none">
             </header>
-
-            <div id="content-pages" class="flex-1 overflow-y-auto p-6 md:p-10">
+            <div id="content-pages" class="flex-1 overflow-y-auto p-6">
                 <section id="page-job-board">
                     <h2 class="text-3xl font-black">Job Board</h2>
                     <div id="gig-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8"></div>
                 </section>
-
                 <section id="page-post-gig" class="hidden max-w-2xl mx-auto">
                     <h2 class="text-3xl font-black text-center">Hire a Student</h2>
                     <form onsubmit="handlePost(event)" class="space-y-4 glass-card p-8 rounded-[2.5rem] mt-6">
-                        <div><label class="text-xs font-black ml-2">GIG TITLE</label><input type="text" id="p-title" class="custom-input" required></div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label class="text-xs font-black ml-2">BUDGET (₦)</label><input type="number" id="p-price" class="custom-input" required></div>
-                            <div><label class="text-xs font-black ml-2">LOCATION</label><input type="text" id="p-loc" class="custom-input" required></div>
-                        </div>
-                        <div><label class="text-xs font-black ml-2">GIG DESCRIPTION</label><textarea id="p-desc" class="custom-input h-32" required></textarea></div>
-                        <button type="submit" class="w-full bg-blue-600 text-white p-5 rounded-2xl font-black text-lg">Post Gig Now</button>
+                        <input type="text" id="p-title" placeholder="Gig Title" class="custom-input" required>
+                        <input type="number" id="p-price" placeholder="Budget (₦)" class="custom-input" required>
+                        <input type="text" id="p-loc" placeholder="Location" class="custom-input" required>
+                        <textarea id="p-desc" placeholder="Gig Description" class="custom-input h-32" required></textarea>
+                        <button type="submit" class="w-full bg-blue-600 text-white p-5 rounded-2xl font-black">Post Gig Now</button>
                     </form>
                 </section>
-
-                <section id="page-profile" class="hidden max-w-3xl mx-auto">
-                    <h2 class="text-3xl font-black mb-8">My Profile</h2>
-                    <div class="glass-card p-8 rounded-[2.5rem] space-y-6">
-                        <div class="flex flex-col items-center gap-4 mb-6">
-                            <div class="relative w-32 h-32">
-                                <img id="profile-preview" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=128" class="w-full h-full rounded-full object-cover">
-                                <label class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer"><i class="fas fa-camera"></i><input type="file" class="hidden" accept="image/*" onchange="previewImage(event)"></label>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" class="custom-input" placeholder="Full Name">
-                            <input type="text" class="custom-input" placeholder="State">
-                            <input type="text" class="custom-input" placeholder="University">
-                            <input type="text" class="custom-input" placeholder="Faculty/Department">
-                        </div>
-                        <button onclick="alert('Profile Updated!')" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black">Save Changes</button>
-                    </div>
+                <section id="page-profile" class="hidden">
+                    <h2 class="text-3xl font-black mb-8 text-center">My Profile</h2>
+                    <div class="glass-card p-8 rounded-[2.5rem] text-center">Profile customization coming soon.</div>
                 </section>
-
-                <section id="page-settings" class="hidden max-w-2xl mx-auto text-center">
+                <section id="page-settings" class="hidden text-center">
                     <h2 class="text-3xl font-black mb-8">Appearance</h2>
                     <div class="grid grid-cols-3 gap-4">
-                        <button onclick="updateTheme('light')" id="theme-light" class="theme-btn"><i class="fas fa-sun"></i> Light</button>
-                        <button onclick="updateTheme('dark')" id="theme-dark" class="theme-btn"><i class="fas fa-moon"></i> Dark</button>
-                        <button onclick="updateTheme('system')" id="theme-system" class="theme-btn"><i class="fas fa-desktop"></i> System</button>
+                        <button onclick="updateTheme('light')" class="theme-btn"><i class="fas fa-sun"></i> Light</button>
+                        <button onclick="updateTheme('dark')" class="theme-btn"><i class="fas fa-moon"></i> Dark</button>
+                        <button onclick="updateTheme('system')" class="theme-btn"><i class="fas fa-desktop"></i> System</button>
                     </div>
                 </section>
-
-                <section id="page-manage" class="hidden"><h2 class="text-3xl font-black mb-8">Manage Gigs</h2><div class="glass-card p-8 rounded-[2.5rem] text-center">No active listings.</div></section>
             </div>
         </main>
     </div>
 
     <div id="forgot-modal" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-[2.5rem] p-8 relative">
-            <button onclick="toggleModal('forgot', false)" class="absolute top-6 right-6 text-xl">&times;</button>
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-[2.5rem] p-8">
             <h2 class="text-2xl font-black mb-4">Reset Password</h2>
-            <p class="text-slate-500 text-sm mb-6">Enter your email to receive a reset link.</p>
-            <input type="email" placeholder="University Email" class="custom-input mb-4" required>
-            <button onclick="alert('Reset link sent!'); toggleModal('forgot', false)" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black">Send Reset Link</button>
+            <input type="email" placeholder="Uni Email" class="custom-input mb-4">
+            <button onclick="toggleModal('forgot', false)" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black">Send Link</button>
         </div>
     </div>
-
     <div id="terms-modal" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[2.5rem] p-10">
-            <h3 class="font-black text-2xl mb-6 text-blue-600">GigPort Platform Terms</h3>
-            <div class="h-80 overflow-y-auto pr-4 text-sm text-slate-500 leading-relaxed space-y-4">
-                <p><strong>1. Eligibility:</strong> You must be an active student with a verifiable university email to use GigPort.</p>
-                <p><strong>2. Engagement:</strong> GigPort is a peer-to-peer marketplace. We are not liable for task quality.</p>
-                <p><strong>3. Honor Code:</strong> Services must not violate university academic integrity policies.</p>
-                <p><strong>4. Safety:</strong> Use campus locations for physical transactions.</p>
-            </div>
-            <button onclick="toggleModal('terms', false)" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black mt-6">I Agree</button>
-        </div>
-    </div>
-
-    <div id="apply-modal" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-[2.5rem] p-8">
-            <h2 class="text-2xl font-black mb-6">Gig Application</h2>
-            <form onsubmit="handleApply(event)" class="space-y-4">
-                <input type="text" placeholder="Educational Background" class="custom-input" required>
-                <input type="text" placeholder="University" class="custom-input" required>
-                <input type="text" placeholder="Relevant Skills" class="custom-input" required>
-                <button type="submit" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black">Apply Now</button>
-            </form>
+            <h3 class="font-black text-2xl mb-6">Terms & Conditions</h3>
+            <div class="text-sm text-slate-500">Student Marketplace. No fraud. Professional behavior only.</div>
+            <button onclick="toggleModal('terms', false)" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-black mt-6">Agree</button>
         </div>
     </div>
 
     <script>
-        let localGigs = [
-            { id: 1, title: "Tutoring: Intro to Stats", price: 4000, location: "Library", description: "Need someone to explain probability distributions." },
-            { id: 2, title: "Graphic Design: Event Flyer", price: 7000, location: "Remote", description: "Need a flyer for the faculty dinner." }
-        ];
+        // --- YOUR CONNECTED SUPABASE ---
+        const supabaseUrl = 'https://ybfamugobqgkdbezkgyw.supabase.co'; 
+        const supabaseKey = 'sb_publishable_xZtl0fMCuBuMAx0PoPQ_GA_ybiiKnIi'; 
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+        let localGigs = [];
         let timerInterval;
 
-        function startResendTimer() {
-            const btn = document.getElementById('resend-btn');
-            const timerEl = document.getElementById('timer');
-            let timeLeft = 59;
-            btn.disabled = true;
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                timerEl.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    btn.disabled = false;
-                    btn.innerHTML = "Resend Code";
-                }
-            }, 1000);
+        async function fetchGigs() {
+            const { data, error } = await _supabase.from('gigs').select('*').order('id', { ascending: false });
+            if (!error) { localGigs = data; renderGigs(localGigs); }
         }
 
-        function showVerify() {
-            document.getElementById('auth-container').classList.add('hidden');
-            document.getElementById('verify-screen').classList.remove('hidden');
-            startResendTimer();
-        }
-
-        function showDashboard() {
-            // FIX: Hide all auth screens before showing dashboard
-            document.getElementById('auth-container').classList.add('hidden');
-            document.getElementById('verify-screen').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            renderGigs(localGigs);
-        }
-
-        function updateTheme(mode) {
-            localStorage.setItem('gigport-theme', mode);
-            applyTheme();
-        }
-
-        function applyTheme() {
-            const mode = localStorage.getItem('gigport-theme') || 'system';
-            const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            document.body.classList.toggle('dark-mode', isDark);
-            ['light', 'dark', 'system'].forEach(m => document.getElementById(`theme-${m}`)?.classList.toggle('active', mode === m));
-        }
-
-        function handlePost(e) {
+        async function handlePost(e) {
             e.preventDefault();
-            localGigs.unshift({
-                id: Date.now(),
-                title: document.getElementById('p-title').value,
-                price: document.getElementById('p-price').value,
-                location: document.getElementById('p-loc').value,
-                description: document.getElementById('p-desc').value
-            });
-            alert("Gig Posted!");
-            renderGigs(localGigs);
-            showPage('job-board');
-            e.target.reset();
+            const gig = { 
+                title: document.getElementById('p-title').value, 
+                price: document.getElementById('p-price').value, 
+                location: document.getElementById('p-loc').value, 
+                description: document.getElementById('p-desc').value 
+            };
+            const { error } = await _supabase.from('gigs').insert([gig]);
+            if (error) alert("Supabase says: " + error.message);
+            else { alert("Gig Live!"); fetchGigs(); showPage('job-board'); e.target.reset(); }
         }
 
         function renderGigs(list) {
             document.getElementById('gig-list').innerHTML = list.map(g => `
                 <div class="glass-card p-6 rounded-[2rem] border-l-4 border-l-blue-500">
                     <div class="flex justify-between items-start mb-4">
-                        <div><h3 class="font-black text-xl text-blue-600">${g.title}</h3><p class="text-xs font-bold text-slate-400 uppercase">${g.location}</p></div>
+                        <div><h3 class="font-black text-xl text-blue-600">${g.title}</h3><p class="text-xs font-bold text-slate-400">${g.location}</p></div>
                         <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-black">₦${g.price}</span>
                     </div>
                     <p class="text-sm text-slate-500 mb-6">${g.description}</p>
-                    <button onclick="toggleModal('apply', true)" class="w-full bg-slate-100 text-blue-600 font-black py-3 rounded-xl">Apply</button>
+                    <button class="w-full bg-slate-100 text-blue-600 font-black py-3 rounded-xl">Apply</button>
                 </div>
             `).join('');
         }
 
-        function handleApply(e) {
-            e.preventDefault();
-            alert("Applied!");
-            toggleModal('apply', false);
-            showPage('job-board');
+        function showDashboard() {
+            document.getElementById('auth-container').classList.add('hidden');
+            document.getElementById('verify-screen').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            fetchGigs();
+        }
+
+        function startResendTimer() {
+            let timeLeft = 59;
+            const btn = document.getElementById('resend-btn');
+            btn.disabled = true;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                if (timeLeft <= 0) { clearInterval(timerInterval); btn.disabled = false; btn.innerHTML = "Resend Code"; }
+            }, 1000);
+        }
+
+        function showVerify() { 
+            document.getElementById('auth-container').classList.add('hidden'); 
+            document.getElementById('verify-screen').classList.remove('hidden'); 
+            startResendTimer(); 
         }
 
         function showPage(p) {
@@ -306,37 +219,35 @@
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(`page-${p}`).classList.remove('hidden');
             document.getElementById(`nav-${p}`).classList.add('active');
-            if(window.innerWidth < 768) toggleSidebar();
         }
 
         function toggleAuth(v) { document.getElementById('login-view').classList.toggle('hidden', v === 'reg'); document.getElementById('reg-view').classList.toggle('hidden', v === 'login'); }
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sidebar-closed'); }
         function toggleModal(id, show) { document.getElementById(`${id}-modal`).classList.toggle('hidden', !show); }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sidebar-closed'); }
         function togglePass(id) { const x = document.getElementById(id); x.type = x.type === "password" ? "text" : "password"; }
-        function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = () => document.getElementById('profile-preview').src = reader.result;
-            reader.readAsDataURL(event.target.files[0]);
+        function updateTheme(m) { localStorage.setItem('theme', m); applyTheme(); }
+        function applyTheme() {
+            const m = localStorage.getItem('theme') || 'light';
+            const dark = m === 'dark' || (m === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.body.classList.toggle('dark-mode', dark);
         }
+
         function validatePass(v) {
-            const up = /[A-Z]/.test(v), low = /[a-z]/.test(v), spec = /[!@#$%]/.test(v), len = v.length >= 8;
-            document.getElementById('up').className = up ? 'requirement met' : 'requirement';
-            document.getElementById('low').className = low ? 'requirement met' : 'requirement';
-            document.getElementById('spec').className = spec ? 'requirement met' : 'requirement';
-            document.getElementById('len').className = len ? 'requirement met' : 'requirement';
+            const met = /[A-Z]/.test(v) && /[a-z]/.test(v) && /[!@#$%]/.test(v) && v.length >= 8;
             const btn = document.getElementById('regBtn');
-            btn.disabled = !(up && low && spec && len);
-            btn.style.opacity = btn.disabled ? "0.5" : "1";
+            btn.disabled = !met; btn.style.opacity = met ? "1" : "0.5";
         }
+
         function searchGigs() {
             const val = document.getElementById('gigSearch').value.toLowerCase();
             renderGigs(localGigs.filter(g => g.title.toLowerCase().includes(val) || g.description.toLowerCase().includes(val)));
         }
 
         window.onload = () => { 
-            applyTheme();
+            applyTheme(); 
             if(document.querySelector("#phone")) window.intlTelInput(document.querySelector("#phone"), { initialCountry: "ng" }); 
         };
     </script>
 </body>
-</html>
+    </html>
+    
