@@ -3,151 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GigPort | UniPort Elite</title>
+    <title>GigPort | UniPort Elite Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f8fafc; margin: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f8fafc; scroll-behavior: smooth; }
         .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(56, 189, 248, 0.1); }
         .sky-gradient { background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); }
         .hidden { display: none; }
-        input, textarea { background: #0f172a !important; border: 1px solid #1e293b !important; color: white !important; border-radius: 12px !important; padding: 12px !important; }
+        input, textarea { background: #0f172a !important; border: 1px solid #1e293b !important; color: white !important; border-radius: 12px !important; padding: 12px !important; outline: none; }
+        input:focus { border-color: #0ea5e9 !important; }
         .tab-active { color: #0ea5e9; border-bottom: 2px solid #0ea5e9; }
-        
-        /* Slide Styles */
-        .slide-box { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 60px; border-bottom: 2px solid #1e293b; }
-        .obj-card { background: rgba(14, 165, 233, 0.1); padding: 20px; border-radius: 20px; border: 1px solid rgba(14, 165, 233, 0.2); }
+        .slide-box { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 40px; border-bottom: 1px solid #1e293b; }
     </style>
 </head>
 <body>
 
     <div id="slides-container">
         <section class="slide-box">
-            <h1 class="text-7xl font-extrabold mb-6 tracking-tighter">Gig<span class="text-sky-400">Port</span></h1>
-            <div class="glass p-10 rounded-3xl max-w-3xl">
-                <h2 class="text-3xl font-bold text-sky-400 mb-4"><i class="fa-solid fa-bullseye mr-3"></i>Project Aim</h2>
-                <p class="text-xl text-slate-400">To connect students with real-time income-generating gigs, bridging the gap between talent and demand within the university ecosystem.</p>
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-8xl font-black mb-4 tracking-tighter">Gig<span class="text-sky-400">Port</span></h1>
+                <div class="glass p-10 rounded-[40px] mt-8 text-left border-t-4 border-sky-500">
+                    <h2 class="text-3xl font-bold text-white mb-4"><i class="fa-solid fa-bullseye text-sky-400 mr-3"></i>Aim</h2>
+                    <p class="text-xl text-slate-400 leading-relaxed">To connect students with real-time income-generating gigs, fostering a secure marketplace for talent and labor within the university ecosystem.</p>
+                </div>
+                <p class="mt-12 text-slate-500 animate-bounce">Scroll down for Objectives</p>
             </div>
-            <p class="mt-10 animate-bounce text-slate-500">Scroll down to see Objectives ↓</p>
         </section>
 
-        <section class="slide-box">
-            <h2 class="text-4xl font-bold mb-10 border-l-4 border-sky-500 pl-6">Objectives & Focus</h2>
-            <div class="grid md:grid-cols-3 gap-6 max-w-6xl">
-                <div class="obj-card">
-                    <i class="fa-solid fa-plus-circle text-sky-400 text-2xl mb-4"></i>
-                    <h3 class="font-bold text-xl mb-2">Post Gigs</h3>
-                    <p class="text-sm text-slate-400">Students can list jobs ranging from laundry to graphics design.</p>
+        <section class="slide-box bg-slate-950/50">
+            <div class="max-w-6xl mx-auto w-full">
+                <h2 class="text-4xl font-bold mb-12 border-l-8 border-sky-500 pl-6 uppercase tracking-tighter">Project Objectives</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="glass p-8 rounded-3xl">
+                        <i class="fa-solid fa-briefcase text-4xl text-sky-400 mb-6"></i>
+                        <h3 class="text-xl font-bold mb-3">Post Gigs</h3>
+                        <p class="text-slate-400 text-sm">Allows students to list professional services and tasks for peer-to-peer hiring.</p>
+                    </div>
+                    <div class="glass p-8 rounded-3xl">
+                        <i class="fa-solid fa-paper-plane text-4xl text-sky-400 mb-6"></i>
+                        <h3 class="text-xl font-bold mb-3">Apply</h3>
+                        <p class="text-slate-400 text-sm">A seamless application portal where students pitch their skills to employers.</p>
+                    </div>
+                    <div class="glass p-8 rounded-3xl">
+                        <i class="fa-solid fa-chart-line text-4xl text-sky-400 mb-6"></i>
+                        <h3 class="text-xl font-bold mb-3">Manage Listings</h3>
+                        <p class="text-slate-400 text-sm">Real-time dashboard to track job status, approvals, and personal listings.</p>
+                    </div>
                 </div>
-                <div class="obj-card">
-                    <i class="fa-solid fa-paper-plane text-sky-400 text-2xl mb-4"></i>
-                    <h3 class="font-bold text-xl mb-2">Apply</h3>
-                    <p class="text-sm text-slate-400">Integrated professional pitch system for applicants.</p>
+                <div class="mt-12 p-8 glass rounded-3xl bg-sky-500/5 border-sky-500/20">
+                    <p class="text-sky-400 font-bold mb-2">EXPECTED FOCUS: <span class="text-white">Job Board Connectivity</span></p>
+                    <p class="text-slate-500 font-semibold">DEMO: Post → Board Update → Apply → Approval Notification</p>
                 </div>
-                <div class="obj-card">
-                    <i class="fa-solid fa-tasks text-sky-400 text-2xl mb-4"></i>
-                    <h3 class="font-bold text-xl mb-2">Manage</h3>
-                    <p class="text-sm text-slate-400">Real-time status tracking for posted and applied listings.</p>
-                </div>
+                <button onclick="document.getElementById('auth-section').scrollIntoView()" class="mt-10 sky-gradient px-12 py-4 rounded-2xl font-black text-lg shadow-xl shadow-sky-500/20">ENTER LIVE PORTAL</button>
             </div>
-            <div class="mt-12 p-6 glass rounded-2xl inline-block">
-                <p class="font-bold text-sky-400">Expected Focus: <span class="text-white">Live Job Board</span></p>
-                <p class="text-sm text-slate-500">Demo Flow: User Profile → Post → Global Board → Apply</p>
-            </div>
-            <button onclick="document.getElementById('auth-section').scrollIntoView({behavior:'smooth'})" class="mt-10 sky-gradient px-8 py-4 rounded-2xl font-bold">Launch Live Demo</button>
         </section>
     </div>
 
-    <div id="auth-section" class="min-h-screen flex items-center justify-center p-6 bg-slate-950">
-        <div class="glass w-full max-w-xl p-8 rounded-3xl shadow-2xl">
+    <div id="auth-section" class="min-h-screen flex items-center justify-center p-6 bg-[#010409]">
+        <div class="glass w-full max-w-xl p-10 rounded-[35px] shadow-2xl">
             <h2 id="auth-title" class="text-3xl font-bold text-center mb-2">Sign In</h2>
-            <p id="auth-sub" class="text-center text-slate-500 text-sm mb-8">Access the UniPort Marketplace</p>
+            <p id="auth-sub" class="text-center text-slate-500 text-sm mb-10">UniPort Student Gateway</p>
 
             <form id="auth-form" class="space-y-4">
-                <div id="signup-fields" class="hidden grid grid-cols-2 gap-4">
-                    <input type="text" id="full_name" placeholder="Full Name" class="w-full">
-                    <input type="text" id="nickname" placeholder="Nickname (Alias)" class="w-full">
-                    <input type="text" id="uni" placeholder="University" class="w-full">
-                    <input type="text" id="faculty" placeholder="Faculty/Dept" class="w-full">
+                <div id="signup-fields" class="hidden space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="full_name" placeholder="Full Name" class="w-full">
+                        <input type="text" id="nickname" placeholder="Nickname / Alias" class="w-full">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="uni" placeholder="University" class="w-full">
+                        <input type="text" id="faculty" placeholder="Faculty / Dept" class="w-full">
+                    </div>
                 </div>
-                <input type="email" id="email" placeholder="Verification Email" class="w-full" required>
-                <input type="password" id="password" placeholder="Password" class="w-full" required>
+
+                <input type="email" id="email" placeholder="Student Email for Verification" class="w-full" required>
+                <input type="password" id="password" placeholder="Secure Password" class="w-full" required>
                 
-                <div class="flex justify-between items-center text-[10px]">
-                    <label class="flex items-center text-slate-500">
-                        <input type="checkbox" id="terms" class="mr-1" required> I agree to the <span class="text-sky-400 ml-1">Terms</span>
+                <div class="flex justify-between items-center text-[11px] px-1">
+                    <label class="flex items-center text-slate-400 cursor-pointer">
+                        <input type="checkbox" id="terms" class="mr-2 accent-sky-500" required> 
+                        I accept the <span class="text-sky-400 ml-1 underline" onclick="alert('TERMS OF SERVICE:\n1. Academic Integrity must be maintained.\n2. No fraudulent gig listings.\n3. Respectful communication between students.')">Terms & Conditions</span>
                     </label>
-                    <button type="button" onclick="alert('Reset link sent!')" class="text-sky-400">Forgot Password?</button>
+                    <button type="button" onclick="resetPassword()" class="text-sky-400 hover:text-sky-300 font-bold">Forgot Password?</button>
                 </div>
-                <button type="submit" id="auth-btn" class="w-full sky-gradient py-4 rounded-xl font-bold">Login</button>
+
+                <button type="submit" id="auth-btn" class="w-full sky-gradient py-4 rounded-2xl font-bold text-lg mt-4 active:scale-95 transition">Login</button>
             </form>
-            <button onclick="toggleAuth()" id="toggle-btn" class="w-full mt-6 text-sm text-slate-500">New here? Create Account</button>
+            <button onclick="toggleAuth()" id="toggle-btn" class="w-full mt-8 text-sm text-slate-500 font-semibold hover:text-sky-400 transition underline">New Student? Create Account</button>
         </div>
     </div>
 
     <div id="dashboard" class="hidden min-h-screen">
-        <nav class="glass sticky top-0 z-50 px-8 py-4 flex justify-between items-center">
-            <span class="text-2xl font-black">Gig<span class="text-sky-400">Port</span></span>
+        <nav class="glass sticky top-0 z-50 px-8 py-5 flex justify-between items-center border-b border-white/5">
+            <span class="text-2xl font-black tracking-tighter">Gig<span class="text-sky-400">Port</span></span>
             <div class="flex items-center gap-6">
-                <div class="relative"><i class="fa-solid fa-bell text-slate-500"></i><span id="dot" class="hidden absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span></div>
-                <span id="user-pill" class="text-xs font-bold bg-sky-500/10 text-sky-400 px-3 py-1 rounded-full border border-sky-500/20"></span>
+                <div class="relative cursor-pointer" onclick="alert('Check Manage Listings for Approvals')">
+                    <i class="fa-solid fa-bell text-slate-400 text-xl"></i>
+                    <span id="notif-dot" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#020617]"></span>
+                </div>
+                <div class="h-8 w-[1px] bg-slate-800"></div>
+                <span id="user-pill" class="text-xs font-bold text-sky-400 bg-sky-500/10 px-4 py-2 rounded-full border border-sky-500/20"></span>
             </div>
         </nav>
 
         <main class="max-w-6xl mx-auto p-8">
-            <div class="flex gap-8 mb-10 border-b border-slate-800">
-                <button onclick="tab('board')" id="t-board" class="pb-4 font-bold tab-active">JOB BOARD</button>
-                <button onclick="tab('manage')" id="t-manage" class="pb-4 font-bold text-slate-500">MANAGE GIGS</button>
-                <button onclick="tab('profile')" id="t-profile" class="pb-4 font-bold text-slate-500">PROFILE ID</button>
+            <div class="flex gap-10 mb-10 border-b border-slate-800">
+                <button onclick="tab('board')" id="t-board" class="pb-4 font-bold tab-active transition-all">JOB BOARD</button>
+                <button onclick="tab('manage')" id="t-manage" class="pb-4 font-bold text-slate-500 hover:text-white transition-all">MANAGE LISTINGS</button>
+                <button onclick="tab('profile')" id="t-profile" class="pb-4 font-bold text-slate-500 hover:text-white transition-all">PROFILE ID</button>
             </div>
 
             <div id="v-board" class="grid lg:grid-cols-12 gap-10">
                 <div class="lg:col-span-4">
-                    <div class="glass p-6 rounded-3xl border-t-4 border-sky-500">
-                        <h3 class="font-bold mb-4">Post New Gig</h3>
-                        <form id="gig-form" class="space-y-3">
-                            <input type="text" id="g-title" placeholder="Service Needed" class="w-full text-sm" required>
-                            <input type="number" id="g-price" placeholder="Price (₦)" class="w-full text-sm" required>
-                            <input type="text" id="g-loc" placeholder="Location" class="w-full text-sm" required>
-                            <textarea id="g-desc" placeholder="Details..." class="w-full text-sm h-24" required></textarea>
-                            <button class="w-full sky-gradient py-3 rounded-xl font-bold text-sm">Publish to Board</button>
+                    <div class="glass p-8 rounded-[30px] border-t-4 border-sky-500 sticky top-28">
+                        <h3 class="text-xl font-bold mb-6">Create Listing</h3>
+                        <form id="gig-form" class="space-y-4">
+                            <input type="text" id="g-title" placeholder="Service Title (e.g. Logo Design)" class="w-full text-sm" required>
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="number" id="g-price" placeholder="Budget (₦)" class="w-full text-sm" required>
+                                <input type="text" id="g-loc" placeholder="Location" class="w-full text-sm" required>
+                            </div>
+                            <textarea id="g-desc" placeholder="Explain the job requirements..." class="w-full text-sm h-32" required></textarea>
+                            <button class="w-full sky-gradient py-4 rounded-xl font-bold shadow-lg shadow-sky-500/20 active:scale-95 transition">Post Gig</button>
                         </form>
                     </div>
                 </div>
-                <div id="feed" class="lg:col-span-8 space-y-4">
+                <div id="feed" class="lg:col-span-8 space-y-6">
                     </div>
             </div>
 
-            <div id="v-manage" class="hidden space-y-10">
-                <div><h3 class="font-bold mb-4">My Posted Listings</h3><div id="my-gigs" class="grid grid-cols-2 gap-4"></div></div>
-                <div><h3 class="font-bold mb-4">My Applications</h3><div id="my-apps" class="grid grid-cols-2 gap-4"></div></div>
+            <div id="v-manage" class="hidden grid md:grid-cols-2 gap-10">
+                <div class="glass p-8 rounded-3xl">
+                    <h3 class="text-xl font-bold mb-6 text-sky-400">My Job Posts</h3>
+                    <div id="my-gigs" class="space-y-4"></div>
+                </div>
+                <div class="glass p-8 rounded-3xl">
+                    <h3 class="text-xl font-bold mb-6 text-sky-400">Applications Sent</h3>
+                    <div id="my-apps" class="space-y-4"></div>
+                </div>
             </div>
 
             <div id="v-profile" class="hidden">
-                <div class="glass max-w-xl mx-auto p-10 rounded-3xl text-center">
-                    <div class="w-32 h-32 bg-slate-800 rounded-full mx-auto mb-6 flex items-center justify-center border-4 border-sky-500 overflow-hidden">
-                        <i class="fa-solid fa-user-tie text-4xl text-slate-500"></i>
+                <div class="glass max-w-2xl mx-auto p-12 rounded-[40px] text-center">
+                    <div class="relative inline-block mb-8">
+                        <div class="w-40 h-40 bg-slate-900 rounded-full border-4 border-sky-500 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-user-graduate text-6xl text-slate-700"></i>
+                        </div>
+                        <button onclick="alert('Photo upload service starting...')" class="absolute bottom-2 right-2 bg-sky-500 w-10 h-10 rounded-full border-4 border-[#0f172a] flex items-center justify-center"><i class="fa-solid fa-camera text-xs text-white"></i></button>
                     </div>
-                    <label class="text-xs text-sky-400 cursor-pointer hover:underline mb-8 block">Upload Face Photo ID</label>
-                    <div id="profile-data" class="grid grid-cols-2 gap-6 text-left"></div>
-                    <button onclick="location.reload()" class="mt-10 text-red-500 text-sm">Sign Out</button>
+                    <div id="profile-display" class="grid grid-cols-2 gap-8 text-left"></div>
+                    <button onclick="location.reload()" class="mt-12 text-red-500 font-bold text-sm hover:underline">Log Out Securely</button>
                 </div>
             </div>
         </main>
     </div>
 
-    <div id="modal" class="hidden fixed inset-0 z-[100] bg-slate-950/90 flex items-center justify-center p-4">
-        <div class="glass w-full max-w-lg p-8 rounded-3xl">
-            <h3 id="m-title" class="text-2xl font-bold mb-6">Apply</h3>
-            <form id="app-form" class="space-y-4">
+    <div id="modal" class="hidden fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-6">
+        <div class="glass w-full max-w-xl p-10 rounded-[35px] border-t-4 border-sky-500">
+            <h3 id="m-title" class="text-3xl font-bold mb-2">Apply</h3>
+            <p class="text-slate-500 text-sm mb-8">Pitch your skills directly to the student employer.</p>
+            <form id="app-form" class="space-y-5">
                 <input type="hidden" id="m-id">
-                <textarea id="m-pitch" placeholder="Pitch your skills..." class="w-full h-32" required></textarea>
-                <input type="text" id="m-phone" placeholder="WhatsApp Number" class="w-full" required>
-                <button class="w-full sky-gradient py-4 rounded-xl font-bold">Send Application</button>
-                <button type="button" onclick="closeM()" class="w-full text-slate-500 text-xs mt-2">Close</button>
+                <textarea id="m-pitch" placeholder="Why are you the best fit for this gig?"class="w-full h-40" required></textarea>
+                <input type="text" id="m-phone" placeholder="WhatsApp / Phone Number" class="w-full" required>
+                <button class="w-full sky-gradient py-4 rounded-2xl font-bold text-lg shadow-xl shadow-sky-500/20">Send Application</button>
+                <button type="button" onclick="closeModal()" class="w-full text-slate-500 text-xs font-bold hover:text-white uppercase tracking-widest mt-2">Cancel</button>
             </form>
         </div>
     </div>
@@ -161,51 +185,69 @@
         function toggleAuth() {
             isSignup = !isSignup;
             document.getElementById('signup-fields').classList.toggle('hidden');
-            document.getElementById('auth-title').innerText = isSignup ? 'Create Account' : 'Sign In';
+            document.getElementById('auth-title').innerText = isSignup ? 'Create Student Account' : 'Sign In';
             document.getElementById('auth-btn').innerText = isSignup ? 'Register' : 'Login';
+        }
+
+        // PASSWORD RESET LOGIC
+        async function resetPassword() {
+            const email = document.getElementById('email').value;
+            if(!email) return alert("Please enter your email address first.");
+            const { error } = await _db.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+            if(error) alert(error.message);
+            else alert("A password reset link has been sent to your email!");
         }
 
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            
             if(isSignup) {
-                const { data } = await _db.auth.signUp({email, password});
+                const { data, error } = await _db.auth.signUp({email, password});
+                if(error) return alert(error.message);
                 await _db.from('profiles').insert([{
                     id: data.user.id, full_name: document.getElementById('full_name').value,
                     nickname: document.getElementById('nickname').value, university: document.getElementById('uni').value,
                     faculty_dept: document.getElementById('faculty').value
                 }]);
-                alert("Verified! Login now."); location.reload();
+                alert("Account Created! You can now log in."); toggleAuth();
             } else {
                 const { error } = await _db.auth.signInWithPassword({email, password});
-                if(!error) startApp(); else alert(error.message);
+                if(!error) initDashboard(); else alert(error.message);
             }
         });
 
-        async function startApp() {
+        async function initDashboard() {
             document.getElementById('auth-section').classList.add('hidden');
             document.getElementById('slides-container').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             const { data: { user } } = await _db.auth.getUser();
             const { data: p } = await _db.from('profiles').select('*').eq('id', user.id).single();
-            document.getElementById('user-pill').innerText = `@${p.nickname}`;
-            loadBoard();
-            _db.channel('any').on('postgres_changes', {event:'*', schema:'public', table:'gigs'}, loadBoard).subscribe();
+            document.getElementById('user-pill').innerText = `@${p.nickname || 'Student'}`;
+            refreshBoard();
+            // REAL TIME LISTENER
+            _db.channel('board').on('postgres_changes', {event:'*', schema:'public', table:'gigs'}, refreshBoard).subscribe();
+            _db.channel('notifs').on('postgres_changes', {event:'UPDATE', schema:'public', table:'applications'}, (p) => {
+                if(p.new.status === 'approved') document.getElementById('notif-dot').classList.remove('hidden');
+            }).subscribe();
         }
 
-        async function loadBoard() {
+        async function refreshBoard() {
             const { data } = await _db.from('gigs').select('*, profiles(nickname)').order('created_at', {ascending:false});
             document.getElementById('feed').innerHTML = data.map(g => `
-                <div class="glass p-6 rounded-3xl border-l-4 border-sky-500">
-                    <div class="flex justify-between mb-4">
-                        <div><h4 class="font-bold text-xl">${g.title}</h4><p class="text-[10px] text-sky-400 uppercase">By @${g.profiles?.nickname}</p></div>
-                        <span class="text-green-400 font-bold">₦${g.price}</span>
+                <div class="glass p-8 rounded-[35px] border-l-8 border-sky-500 hover:border-sky-400 transition-all">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="text-2xl font-bold text-white">${g.title}</h4>
+                            <p class="text-[10px] text-sky-400 font-black uppercase tracking-widest mt-1">Verified Client: @${g.profiles?.nickname}</p>
+                        </div>
+                        <span class="text-2xl font-black text-green-400">₦${Number(g.price).toLocaleString()}</span>
                     </div>
-                    <p class="text-sm text-slate-400 mb-6">${g.description}</p>
-                    <div class="flex justify-between items-center text-[10px]">
-                        <span class="text-slate-600">📍 ${g.location}</span>
-                        <button onclick="openM('${g.id}','${g.title}')" class="bg-sky-600 px-4 py-2 rounded-lg font-bold">APPLY</button>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">${g.description}</p>
+                    <div class="flex justify-between items-center pt-6 border-t border-white/5">
+                        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest"><i class="fa-solid fa-location-dot mr-1"></i> ${g.location}</span>
+                        <button onclick="openModal('${g.id}','${g.title}')" class="bg-sky-500/10 text-sky-400 border border-sky-500/30 px-6 py-2 rounded-xl text-xs font-black hover:bg-sky-500 hover:text-white transition-all shadow-lg">APPLY NOW</button>
                     </div>
                 </div>
             `).join('');
@@ -219,30 +261,45 @@
             document.getElementById('v-'+t).classList.remove('hidden');
             document.getElementById('t-'+t).classList.add('tab-active');
             if(t === 'manage') loadManage();
-            if(t === 'profile') loadP();
+            if(t === 'profile') loadProfileData();
         }
 
         async function loadManage() {
             const { data: { user } } = await _db.auth.getUser();
             const { data: posted } = await _db.from('gigs').select('*').eq('user_id', user.id);
-            document.getElementById('my-gigs').innerHTML = posted.map(g => `<div class="glass p-4 rounded-xl text-xs font-bold">${g.title}</div>`).join('');
+            document.getElementById('my-gigs').innerHTML = posted.map(g => `<div class="glass p-5 rounded-2xl flex justify-between"><span>${g.title}</span><span class="text-green-500 font-bold">Active</span></div>`).join('');
             const { data: apps } = await _db.from('applications').select('*, gigs(title)').eq('applicant_id', user.id);
-            document.getElementById('my-apps').innerHTML = apps.map(a => `<div class="glass p-4 rounded-xl text-xs font-bold">${a.gigs?.title} <br><span class="text-sky-400">${a.status}</span></div>`).join('');
+            document.getElementById('my-apps').innerHTML = apps.map(a => `<div class="glass p-5 rounded-2xl flex justify-between"><span>${a.gigs?.title}</span><span class="text-sky-400 font-bold">${a.status}</span></div>`).join('');
         }
 
-        async function loadP() {
+        async function loadProfileData() {
             const { data: { user } } = await _db.auth.getUser();
             const { data: p } = await _db.from('profiles').select('*').eq('id', user.id).single();
-            document.getElementById('profile-data').innerHTML = `
-                <div><p class="text-[10px] text-slate-500">NAME</p><p class="font-bold">${p.full_name}</p></div>
-                <div><p class="text-[10px] text-slate-500">NICKNAME</p><p class="font-bold text-sky-400">${p.nickname}</p></div>
-                <div><p class="text-[10px] text-slate-500">UNIVERSITY</p><p class="font-bold">${p.university}</p></div>
-                <div><p class="text-[10px] text-slate-500">FACULTY</p><p class="font-bold">${p.faculty_dept}</p></div>
+            document.getElementById('profile-display').innerHTML = `
+                <div><label class="text-[10px] text-slate-500 font-bold uppercase">Name</label><p class="font-bold text-white">${p.full_name}</p></div>
+                <div><label class="text-[10px] text-slate-500 font-bold uppercase">Campus Alias</label><p class="font-bold text-sky-400">${p.nickname}</p></div>
+                <div><label class="text-[10px] text-slate-500 font-bold uppercase">Institution</label><p class="font-bold text-white">${p.university}</p></div>
+                <div><label class="text-[10px] text-slate-500 font-bold uppercase">Department</label><p class="font-bold text-white">${p.faculty_dept}</p></div>
             `;
         }
 
-        function openM(id, t) { document.getElementById('m-id').value = id; document.getElementById('m-title').innerText = t; document.getElementById('modal').classList.remove('hidden'); }
-        function closeM() { document.getElementById('modal').classList.add('hidden'); }
+        function openModal(id, title) { 
+            document.getElementById('m-id').value = id; 
+            document.getElementById('m-title').innerText = title; 
+            document.getElementById('modal').classList.remove('hidden'); 
+        }
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+
+        document.getElementById('gig-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const { data: { user } } = await _db.auth.getUser();
+            await _db.from('gigs').insert([{
+                title: document.getElementById('g-title').value, price: document.getElementById('g-price').value,
+                location: document.getElementById('g-loc').value, description: document.getElementById('g-desc').value,
+                user_id: user.id
+            }]);
+            alert("Gig Published!"); document.getElementById('gig-form').reset();
+        });
 
         document.getElementById('app-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -251,7 +308,7 @@
                 gig_id: document.getElementById('m-id').value, applicant_id: user.id,
                 pitch: document.getElementById('m-pitch').value, contact: document.getElementById('m-phone').value
             }]);
-            alert("Sent!"); closeM();
+            alert("Application Sent to Board!"); closeModal();
         });
     </script>
 </body>
